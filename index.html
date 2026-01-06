@@ -13,14 +13,14 @@ input,select,button{
  width:90%;max-width:320px;padding:12px;margin:8px;
  border-radius:6px;border:none
 }
-button{background:#00ffcc;font-weight:bold}
+button{background:#00ffcc;font-weight:bold;cursor:pointer}
 .menu button{width:45%;margin:5px}
 .card{
  background:rgba(255,255,255,.12);
  padding:15px;margin:15px auto;
  border-radius:10px;max-width:350px
 }
-small{opacity:.85;word-break:break-word}
+small{opacity:.85;word-break:break-word;display:block;margin:5px}
 </style>
 </head>
 
@@ -53,6 +53,8 @@ small{opacity:.85;word-break:break-word}
 
 <p><b>Your Referral Link:</b></p>
 <small id="ref"></small>
+<button onclick="copyRef()">Copy Referral Link</button>
+<p id="copyMsg"></p>
 
 <div class="menu">
 <button onclick="showPlans()">Plans</button>
@@ -143,6 +145,7 @@ function loadDash(){
  go('dashboard');
  balance.innerText=localStorage.balance;
  ref.innerText=localStorage.ref;
+ copyMsg.innerText="";
  showPlans();
 }
 
@@ -180,6 +183,11 @@ function withdraw(){
  localStorage.balance=
  parseInt(localStorage.balance)-300;
  wmsg.innerText="Withdraw request submitted successfully";
+}
+
+function copyRef(){
+ navigator.clipboard.writeText(localStorage.ref);
+ copyMsg.innerText="Referral link copied successfully ✅";
 }
 </script>
 
