@@ -1,227 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Sky Earn</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<title>Sky Earn</title>  
+<meta name="viewport" content="width=device-width, initial-scale=1">  <link rel="manifest" href="manifest.json">  
+<meta name="theme-color" content="#0f2027">  <style>  
+body{  
+ margin:0;font-family:Arial;  
+ background:#0f2027;color:#fff;  
+ padding-bottom:70px  
+}  
+.section{display:none;padding:20px;text-align:center}  
+.show{display:block}  
+  
+input,select,button{  
+ width:90%;max-width:330px;  
+ padding:12px;margin:8px;  
+ border-radius:6px;border:none  
+}  
+button{background:#00ffcc;font-weight:bold}  
+  
+.card{  
+ background:rgba(255,255,255,.12);  
+ padding:15px;margin:15px auto;  
+ border-radius:10px;max-width:360px  
+}  
+small{opacity:.85}  
+  
+.bottom{  
+ position:fixed;bottom:0;left:0;  
+ width:100%;background:#203a43;  
+ display:flex;justify-content:space-around;  
+ padding:10px 0  
+}  
+.bottom button{  
+ width:22%;padding:10px;  
+ font-size:12px;border-radius:20px  
+}  
+</style>  </head>  <body>  <!-- HOME -->  <div id="home" class="section show">  
+<h1>Sky Earn</h1>  
+<p>Online Earning Platform</p>  
+<button onclick="go('login')">Login</button>  
+<button onclick="go('signup')">Sign Up</button>  
+<button id="installBtn" style="display:none">📥 Install App</button>  
+</div>  <!-- LOGIN -->  <div id="login" class="section">  
+<h2>Login</h2>  
+<input placeholder="Phone or Gmail">  
+<input type="password" placeholder="Password">  
+<button onclick="loadDash()">Login</button>  
+<button onclick="go('signup')">Create New Account</button>  
+</div>  <!-- SIGN UP -->  <div id="signup" class="section">  
+<h2>Sign Up</h2>  
+<input placeholder="Phone Number">  
+<input placeholder="Gmail">  
+<input type="password" placeholder="Password">  
+<button onclick="go('verify')">Send 6 Digit Code</button>  
+</div>  <!-- VERIFY -->  <div id="verify" class="section">  
+<h2>Verification</h2>  
+<input id="code" placeholder="6 Digit Code">  
+<p><small>Demo Code: <b>786900</b></small></p>  
+<button onclick="verify()">Verify & Complete</button>  
+</div>  <!-- DASHBOARD -->  <div id="dashboard" class="section">  
+<h2>Dashboard</h2>  
+<p><b>Balance:</b> Rs <span id="balance">0</span></p>  <p><b>Your Referral Link</b></p>  
+<input id="reflink" readonly>  
+<button onclick="copyLink()">Copy Link</button>  <p><small>  
+Referral Bonus Rs10 on join<br>  
+Referral plan buy bonus Rs50  
+</small></p>  <p><small>Total Referrals: <span id="refcount">0</span></small></p>  <div id="plans"></div>  
+</div>  <!-- PLAN PAYMENT -->  <div id="pay" class="section">  
+<h2>Plan Payment</h2>  
+<p><b>JazzCash:</b> 03245549182</p>  
+<p><b>Name:</b> Jhandir Ahmed</p>  
+<p>Payment ke baad screenshot bhejen</p>  
+<p><b>WhatsApp: 03077857478</b></p>  
+<button onclick="confirmPlan()">I Have Paid</button>  
+</div>  <!-- WITHDRAW -->  <div id="withdraw" class="section">  
+<h2>Withdraw</h2>  
+<p>Max Withdrawal Rs 300</p>  
+<p>Processing Time 24–48 Hours</p>  <select>  
+<option>JazzCash</option>  
+<option>EasyPaisa</option>  
+</select>  <input placeholder="Your Name">  
+<input placeholder="Mobile Number">  <button onclick="withdraw()">Submit</button>
 
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f2027">
-
-<style>
-body{
- margin:0;font-family:Arial;
- background:#0f2027;color:#fff;
- padding-bottom:70px
-}
-.section{display:none;padding:20px;text-align:center}
-.show{display:block}
-
-input,select,button{
- width:90%;max-width:330px;
- padding:12px;margin:8px;
- border-radius:6px;border:none
-}
-button{background:#00ffcc;font-weight:bold}
-
-.card{
- background:rgba(255,255,255,.12);
- padding:15px;margin:15px auto;
- border-radius:10px;max-width:360px
-}
-small{opacity:.85}
-
-/* Bottom Menu */
-.bottom{
- position:fixed;bottom:0;left:0;
- width:100%;background:#203a43;
- display:flex;justify-content:space-around;
- padding:10px 0
-}
-.bottom button{
- width:22%;padding:10px;
- font-size:12px;border-radius:20px
-}
-</style>
-</head>
-
-<body>
-
-<!-- HOME -->
-<div id="home" class="section show">
-<h1>Sky Earn</h1>
-<p>Online Earning Platform</p>
-
-<button onclick="go('register')">Start Earning</button>
-<button id="installBtn" style="display:none">📥 Install App</button>
-</div>
-
-<!-- REGISTER -->
-<div id="register" class="section">
-<h2>Register</h2>
-<input placeholder="Phone Number">
-<input placeholder="Gmail">
-<input type="password" placeholder="Password">
-<button onclick="go('verify')">Send 6 Digit Code</button>
-</div>
-
-<!-- VERIFY -->
-<div id="verify" class="section">
-<h2>Verification</h2>
-<input id="code" placeholder="6 Digit Code">
-<p><small>Demo Code: <b>123456</b></small></p>
-<button onclick="verify()">Verify & Complete</button>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="section">
-<h2>Dashboard</h2>
-<p><b>Balance:</b> Rs <span id="balance">0</span></p>
-
-<p><b>Your Referral Link</b></p>
-<input id="reflink" readonly>
-<button onclick="copyLink()">Copy Link</button>
-
-<p><small>
-Referral Bonus ₹10 on join<br>
-Referral plan buy bonus ₹50
-</small></p>
-
-<p><small>Total Referrals: <span id="refcount">0</span></small></p>
-
-<div id="plans"></div>
-</div>
-
-<!-- PLAN PAYMENT -->
-<div id="pay" class="section">
-<h2>Plan Payment</h2>
-<p><b>JazzCash:</b> 03245549182</p>
-<p><b>Name:</b> Jhandir Ahmed</p>
-<p>Payment ke baad screenshot bhejen</p>
-<p><b>WhatsApp: 03077857478</b></p>
-<button onclick="confirmPlan()">I Have Paid</button>
-</div>
-
-<!-- WITHDRAW -->
-<div id="withdraw" class="section">
-<h2>Withdraw</h2>
-<p>Max Withdrawal Rs 300</p>
-<p>Processing Time 24–48 Hours</p>
-
-<select>
-<option>JazzCash</option>
-<option>EasyPaisa</option>
-</select>
-
-<input placeholder="Your Name">
-<input placeholder="Mobile Number">
-
-<button onclick="withdraw()">Submit</button>
-<p id="wmsg"></p>
-</div>
-
-<!-- SUPPORT -->
-<div id="support" class="section">
-<h2>Support</h2>
-<p>📞 0307-7857478</p>
-<p>📧 aivibesstudio009@gmail.com</p>
-</div>
-
-<!-- BOTTOM MENU -->
-<div class="bottom">
-<button onclick="go('dashboard')">Home</button>
-<button onclick="showPlans()">Plans</button>
-<button onclick="go('withdraw')">Withdraw</button>
-<button onclick="go('support')">Support</button>
-</div>
-
-<script>
-/* ---------- APP LOGIC ---------- */
-let plans=[
-{p:100,d:50},{p:400,d:150},{p:800,d:300},
-{p:1200,d:500},{p:2000,d:800}
-];
-let currentDaily=0;
-
-function go(id){
- document.querySelectorAll('.section').forEach(s=>s.classList.remove('show'));
- document.getElementById(id).classList.add('show');
-}
-
-function verify(){
- if(code.value!=="123456"){alert("Wrong Code");return;}
- if(!localStorage.reg){
-  localStorage.balance=10;
-  localStorage.refcount=0;
-  localStorage.reg=1;
- }
- localStorage.ref="https://qidofaxofap135-ai.github.io/my-app/?ref="+Math.floor(Math.random()*99999);
- loadDash();
-}
-
-function loadDash(){
- go('dashboard');
- balance.innerText=localStorage.balance;
- reflink.value=localStorage.ref;
- refcount.innerText=localStorage.refcount;
- showPlans();
-}
-
-function showPlans(){
- go('dashboard');
- let html="";
- plans.forEach((pl,i)=>{
-  html+=`<div class="card">
-  <h3>Plan ${i+1}</h3>
-  <p>Deposit Rs ${pl.p}</p>
-  <p>Daily Earn Rs ${pl.d}</p>
-  <button onclick="buy(${pl.d})">Buy Plan</button>
-  </div>`;
- });
- document.getElementById("plans").innerHTML=html;
-}
-
-function buy(d){
- currentDaily=d;
- go('pay');
-}
-
-function confirmPlan(){
- localStorage.balance=parseInt(localStorage.balance)+currentDaily;
- alert("Plan Activated");
- loadDash();
-}
-
-function withdraw(){
- if(localStorage.balance<300){
-  wmsg.innerText="Minimum 300 required";
-  return;
- }
- localStorage.balance-=300;
- wmsg.innerText="Withdraw request submitted";
-}
-
-function copyLink(){
- navigator.clipboard.writeText(reflink.value);
- alert("Referral link copied");
-}
-
-/* ---------- INSTALL APP (PWA) ---------- */
-let deferredPrompt;
-const installBtn=document.getElementById("installBtn");
-
-window.addEventListener("beforeinstallprompt",(e)=>{
- e.preventDefault();
- deferredPrompt=e;
- installBtn.style.display="inline-block";
-});
-
-installBtn.addEventListener("click",()=>{
- deferredPrompt.prompt();
- deferredPrompt.userChoice.then(()=>{deferredPrompt=null});
-});
-</script>
-
-</body>
-                                </html>
+<p id="wmsg"></p>  
+</div>  <!-- SUPPORT -->  <div id="support" class="section">  
+<h2>Support</h2>  
+<p>📞 0307-7857478</p>  
+<p>📧 aivibesstudio009@gmail.com</p>  
+</div>  <!-- BOTTOM MENU -->  <div class="bottom">  
+<button onclick="loadDash()">Home</button>  
+<button onclick="showPlans()">Plans</button>  
+<button onclick="go('withdraw')">Withdraw</button>  
+<button onclick="go('support')">Support</button>  
+</div>  <script>  
+let plans=[  
+{p:100,d:50},{p:400,d:150},{p:800,d:300},  
+{p:1200,d:500},{p:2000,d:800}  
+];  
+let currentDaily=0;  
+  
+function go(id){  
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('show'));  
+ document.getElementById(id).classList.add('show');  
+}  
+  
+function verify(){  
+ if(code.value!=="123456"){alert("Wrong Code");return;}  
+ if(!localStorage.reg){  
+  localStorage.balance=10;  
+  localStorage.refcount=0;  
+  localStorage.reg=1;  
+ }  
+ localStorage.ref="https://qidofaxofap135-ai.github.io/my-app/?ref="+Math.floor(Math.random()*99999);  
+ loadDash();  
+}  
+  
+function loadDash(){  
+ go('dashboard');  
+ balance.innerText=localStorage.balance || 0;  
+ reflink.value=localStorage.ref || "";  
+ refcount.innerText=localStorage.refcount || 0;  
+ showPlans();  
+}  
+  
+function showPlans(){  
+ go('dashboard');  
+ let html="";  
+ plans.forEach((pl,i)=>{  
+  html+=`<div class="card">  
+  <h3>Plan ${i+1}</h3>  
+  <p>Deposit Rs ${pl.p}</p>  
+  <p>Daily Earn Rs ${pl.d}</p>  
+  <button onclick="buy(${pl.d})">Buy Plan</button>  
+  </div>`;  
+ });  
+ document.getElementById("plans").innerHTML=html;  
+}  
+  
+function buy(d){  
+ currentDaily=d;  
+ go('pay');  
+}  
+  
+function confirmPlan(){  
+ localStorage.balance=parseInt(localStorage.balance)+currentDaily;  
+ alert("Plan Activated");  
+ loadDash();  
+}  
+  
+function withdraw(){  
+ if(localStorage.balance<300){  
+  wmsg.innerText="Minimum 300 required";  
+  return;  
+ }  
+ localStorage.balance-=300;  
+ wmsg.innerText="Withdraw request submitted";  
+}  
+  
+function copyLink(){  
+ navigator.clipboard.writeText(reflink.value);  
+ alert("Referral link copied");  
+}  
+  
+/* INSTALL APP */  
+let deferredPrompt;  
+const installBtn=document.getElementById("installBtn");  
+  
+window.addEventListener("beforeinstallprompt",(e)=>{  
+ e.preventDefault();  
+ deferredPrompt=e;  
+ installBtn.style.display="inline-block";  
+});  
+  
+installBtn.addEventListener("click",()=>{  
+ deferredPrompt.prompt();  
+ deferredPrompt.userChoice.then(()=>{deferredPrompt=null});  
+});  
+</script>  </body>  
+                                                                                                    </html>
