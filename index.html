@@ -20,7 +20,7 @@ button{background:#00ffcc;font-weight:bold}
  padding:15px;margin:15px auto;
  border-radius:10px;max-width:350px
 }
-small{opacity:.8;word-break:break-all}
+small{opacity:.85;word-break:break-word}
 </style>
 </head>
 
@@ -36,7 +36,7 @@ small{opacity:.8;word-break:break-all}
 <!-- REGISTER -->
 <div id="register" class="section">
 <h2>Register</h2>
-<input id="user" placeholder="Email or Phone">
+<input placeholder="Email or Phone">
 <input id="pass" type="password" placeholder="Password">
 <input id="cpass" type="password" placeholder="Confirm Password">
 <button onclick="register()">Register Now</button>
@@ -48,7 +48,10 @@ small{opacity:.8;word-break:break-all}
 
 <p><b>Balance:</b> Rs <span id="balance">0</span></p>
 
-<p><b>Referral Link:</b></p>
+<p><b>Referral Bonus:</b> Rs 10</p>
+<p>Jab aapka referral koi plan buy karega to aapko <b>Rs 50</b> milenge</p>
+
+<p><b>Your Referral Link:</b></p>
 <small id="ref"></small>
 
 <div class="menu">
@@ -60,6 +63,25 @@ small{opacity:.8;word-break:break-all}
 <div id="plans"></div>
 </div>
 
+<!-- PAYMENT -->
+<div id="payment" class="section">
+<h2>Plan Payment</h2>
+
+<p><b>Payment Method:</b> JazzCash</p>
+<p><b>JazzCash Number:</b> 03245549182</p>
+<p><b>Account Name:</b> Jhandir Ahmed</p>
+
+<p>
+Payment JazzCash hone ke baad<br>
+<b>is number par screenshot bhejen:</b>
+</p>
+
+<p><b>WhatsApp:</b> 0307-7857478</p>
+
+<button onclick="confirmBuy()">I Have Paid</button>
+<button onclick="go('dashboard')">Back to Dashboard</button>
+</div>
+
 <!-- WITHDRAW -->
 <div id="withdraw" class="section">
 <h2>Withdraw Request</h2>
@@ -67,7 +89,7 @@ small{opacity:.8;word-break:break-all}
 <p><b>Maximum Withdrawal:</b> Rs 300</p>
 <p><b>Processing Time:</b> 24 to 48 Hours</p>
 
-<select id="method">
+<select>
 <option>JazzCash</option>
 <option>EasyPaisa</option>
 </select>
@@ -97,6 +119,8 @@ let plans=[
 {p:2000,d:800},{p:3000,d:1200},{p:5000,d:2000},
 {p:8000,d:3500},{p:12000,d:5500},{p:20000,d:9000}
 ];
+
+let selectedDaily=0;
 
 function go(id){
  document.querySelectorAll('.section').forEach(s=>s.classList.remove('show'));
@@ -130,15 +154,21 @@ function showPlans(){
    <h3>Plan ${i+1}</h3>
    <p>Deposit: Rs ${pl.p}</p>
    <p>Daily Earning: Rs ${pl.d}</p>
-   <button onclick="buy(${pl.d})">Buy Plan</button>
+   <button onclick="buyPlan(${pl.d})">Buy Plan</button>
   </div>`;
  });
  document.getElementById("plans").innerHTML=html;
 }
 
-function buy(d){
+function buyPlan(d){
+ selectedDaily=d;
+ go('payment');
+}
+
+function confirmBuy(){
  localStorage.balance=
- parseInt(localStorage.balance)+d;
+ parseInt(localStorage.balance)+selectedDaily;
+ alert("Payment received (demo). Balance updated.");
  loadDash();
 }
 
@@ -149,10 +179,9 @@ function withdraw(){
  }
  localStorage.balance=
  parseInt(localStorage.balance)-300;
- wmsg.innerText=
- "Withdraw request submitted successfully";
+ wmsg.innerText="Withdraw request submitted successfully";
 }
 </script>
 
 </body>
-</html>
+ </html>
