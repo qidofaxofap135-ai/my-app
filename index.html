@@ -53,8 +53,12 @@ small{opacity:.85;word-break:break-word;display:block;margin:5px}
 
 <p><b>Your Referral Link:</b></p>
 <small id="ref"></small>
-<button onclick="copyRef()">Copy Referral Link</button>
+
+<button onclick="copyRef()">Copy Link</button>
 <p id="copyMsg"></p>
+
+<p><b>Referral Joined:</b> <span id="refCount">0</span></p>
+<p>Aap ke link se <b><span id="refCount2">0</span></b> bande bane hain</p>
 
 <div class="menu">
 <button onclick="showPlans()">Plans</button>
@@ -135,6 +139,7 @@ function register(){
   return;
  }
  localStorage.balance=0;
+ localStorage.refCount=localStorage.refCount || 0;
  localStorage.ref=
  "https://qidofaxofap135-ai.github.io/my-app/?ref="
  +Math.floor(Math.random()*100000);
@@ -145,6 +150,8 @@ function loadDash(){
  go('dashboard');
  balance.innerText=localStorage.balance;
  ref.innerText=localStorage.ref;
+ refCount.innerText=localStorage.refCount;
+ refCount2.innerText=localStorage.refCount;
  copyMsg.innerText="";
  showPlans();
 }
@@ -171,7 +178,12 @@ function buyPlan(d){
 function confirmBuy(){
  localStorage.balance=
  parseInt(localStorage.balance)+selectedDaily;
- alert("Payment received (demo). Balance updated.");
+
+ // demo referral count increase
+ localStorage.refCount =
+ parseInt(localStorage.refCount) + 1;
+
+ alert("Payment received (demo).");
  loadDash();
 }
 
@@ -187,7 +199,7 @@ function withdraw(){
 
 function copyRef(){
  navigator.clipboard.writeText(localStorage.ref);
- copyMsg.innerText="Referral link copied successfully ✅";
+ copyMsg.innerText="Link copy ho gaya ✅";
 }
 </script>
 
