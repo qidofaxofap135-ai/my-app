@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My First Website</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+    }
+
+    header {
+      background: #0d6efd;
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+    }
+
+    section {
+      background: white;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    button {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0b5ed7;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🚀 Welcome to My Website</h1>
+  <p>GitHub Pages par live</p>
+</header>
+
+<section>
+  <h2>About</h2>
+  <p>
+    Yeh meri pehli proper website hai jo GitHub par host ho rahi hai.
+  </p>
+</section>
+
+<section>
+  <h2>Features</h2>
+  <ul>
+    <li>Simple Design</li>
+    <li>Mobile Friendly</li>
+    <li>Free Hosting</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Start</h2>
+  <button onclick="goNext()">Get Started</button>
+</section>
+
+<script>
+  function goNext() {
+    alert("Website bilkul sahi kaam kar rahi hai ✅");
+  }
+</script>
+
+</body>
+</html>
