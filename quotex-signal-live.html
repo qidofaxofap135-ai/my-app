@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Quotex Signal Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  margin:0;
+  background:#0b1c26;
+  color:#fff;
+  font-family:Arial;
+}
+header{
+  padding:10px;
+  background:#132f3a;
+  text-align:center;
+}
+select,button{
+  padding:6px;
+  margin:3px;
+  border-radius:4px;
+  border:none;
+}
+#chart{
+  display:flex;
+  align-items:flex-end;
+  height:220px;
+  margin:10px;
+  background:#07141b;
+  padding:5px;
+}
+.candle{
+  width:10px;
+  margin:2px;
+  background:#2ecc71;
+}
+.red{background:#e74c3c;}
+#panel{
+  display:flex;
+  justify-content:space-around;
+  padding:8px;
+}
+.box{
+  text-align:center;
+}
+#signal{
+  font-size:22px;
+  font-weight:bold;
+}
+#rsi,#ema{
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h3>📊 Quotex Signal (Demo)</h3>
+
+<select id="pair">
+<option>GBP/USD</option>
+<option>AUD/CAD</option>
+<option>USD/PKR OTC</option>
+</select>
+
+<select id="tf">
+<option value="5">5 Sec</option>
+<option value="10">10 Sec</option>
+<option value="60">1 Minute</option>
+</select>
+
+<button onclick="start()">Start</button>
+</header>
+
+<div id="chart"></div>
+
+<div id="
