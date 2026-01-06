@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quotex Candle Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0f2027;
+  color:#fff;
+}
+header{
+  background:#203a43;
+  padding:10px;
+  text-align:center;
+}
+select,button{
+  padding:6px;
+  margin:4px;
+  border:none;
+  border-radius:4px;
+}
+#timer{
+  text-align:center;
+  font-size:18px;
+  margin-top:5px;
+}
+#chart{
+  display:flex;
+  align-items:flex-end;
+  height:230px;
+  background:#09161d;
+  margin:10px;
+  padding:5px;
+  overflow:hidden;
+}
+.candle{
+  width:10px;
+  margin:2px;
+  background:#2ecc71;
+}
+.candle.red{
+  background:#e74c3c;
+}
+.future{
+  opacity:0.5;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h3>📊 Quotex Candle Demo (Practice)</h3>
+
+<select id="market">
+  <option>EUR/USD</option>
+  <option>GBP/USD</option>
+  <option>USD/JPY</option>
+  <option>AUD/CAD</option>
+  <option>EUR/JPY</option>
+  <option>GBP/JPY</option>
+  <option>USD/PKR OTC</option>
+  <option>EUR/USD OTC</option>
+  <option>GBP/USD OTC</option>
+</select>
+
+<select id="timeframe">
+  <option value="5">5 Seconds</option>
+  <option value="10">10 Seconds</option>
+  <option value="30">30 Seconds</option>
+  <option value="60">1 Minute</option>
+</select>
+
+<select id="ahead">
+  <option value="2">2 Candles Ahead</option>
+  <option value="3">3 Candles Ahead</option>
+</select>
+
+<button onclick="start()">Start</button>
+</header>
+
+<div id="timer">Timer: --</div>
+
+<div id="chart"></div>
+
+<script>
+let interval;
+let timeLeft;
+
+function start(){
+  clearInterval(interval);
+  document.getElementById("chart").innerHTML="";
+  let tf=parseInt(document.getElementById("timeframe").value);
+  let ahead=parseInt(document.getElementById("ahead").value);
+  timeLeft=tf;
+
+  generateCandles(ahead);
+
+  interval=setInterval(()=>{
+    timeLeft--;
+    document.getElementById("timer").innerText="Timer: "+timeLeft+" sec";
+
+    if(timeLeft<=0){
+      shiftCandles(ahead);
+      timeLeft=tf;
+    }
+  },1000);
+}
+
+function generateCandles(ahead){
+  for(let i=0;i<20;i++){
+    addCandle(false);
+  }
+  for(let j=0;j<ahead;j++){
+    addCandle(true);
+  }
+}
+
+function shiftCandles(ahead){
+  let chart=document.getElementById("chart");
+  chart.removeChild(chart.firstChild);
+  addCandle(false);
+
+  // remove old future
+  let futures=document.querySelectorAll(".future");
+  futures.forEach(f=>f.remove());
+
+  // add new future candles
+  for(let i=0;i<ahead;i++){
+    addCandle(true);
+  }
+}
+
+function addCandle(future){
+  let chart=document.getElementById("chart");
+  let candle=document.createElement("div");
+
+  let move=Math.random()>0.5;
+  let height=Math.floor(Math.random()*120)+30;
+
+  candle.className="candle"+(move?"":" red")+(future?" future":"");
+  candle.style.height=height+"px";
+  chart.appendChild(candle);
+}
+</script>
+
+</body>
+    </html>
