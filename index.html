@@ -1,19 +1,19 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Quotex Candle Demo</title>
+<title>Quotex Live Candle Demo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:#0f2027;
+  background:#0b1c26;
   color:#fff;
 }
 header{
-  background:#203a43;
+  background:#132f3a;
   padding:10px;
   text-align:center;
 }
@@ -23,16 +23,20 @@ select,button{
   border:none;
   border-radius:4px;
 }
-#timer{
-  text-align:center;
-  font-size:18px;
+#top{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
   margin-top:5px;
+}
+#timer{
+  font-size:18px;
 }
 #chart{
   display:flex;
   align-items:flex-end;
-  height:230px;
-  background:#09161d;
+  height:260px;
+  background:#07141b;
   margin:10px;
   padding:5px;
   overflow:hidden;
@@ -41,12 +45,15 @@ select,button{
   width:10px;
   margin:2px;
   background:#2ecc71;
+  transition:all .3s;
 }
 .candle.red{
   background:#e74c3c;
 }
-.future{
-  opacity:0.5;
+#next{
+  text-align:center;
+  font-size:20px;
+  margin:10px;
 }
 </style>
 </head>
@@ -54,38 +61,33 @@ select,button{
 <body>
 
 <header>
-<h3>📊 Quotex Candle Demo (Practice)</h3>
+  <h3>📊 Quotex Live Candle (Demo)</h3>
 
-<select id="market">
-  <option>EUR/USD</option>
-  <option>GBP/USD</option>
-  <option>USD/JPY</option>
-  <option>AUD/CAD</option>
-  <option>EUR/JPY</option>
-  <option>GBP/JPY</option>
-  <option>USD/PKR OTC</option>
-  <option>EUR/USD OTC</option>
-  <option>GBP/USD OTC</option>
-</select>
+  <select id="market">
+    <option>USD/PKR OTC</option>
+    <option>EUR/USD</option>
+    <option>GBP/USD</option>
+    <option>AUD/CAD</option>
+    <option>EUR/JPY</option>
+  </select>
 
-<select id="timeframe">
-  <option value="5">5 Seconds</option>
-  <option value="10">10 Seconds</option>
-  <option value="30">30 Seconds</option>
-  <option value="60">1 Minute</option>
-</select>
+  <select id="timeframe">
+    <option value="5">5 Seconds</option>
+    <option value="10">10 Seconds</option>
+    <option value="30">30 Seconds</option>
+    <option value="60">1 Minute</option>
+  </select>
 
-<select id="ahead">
-  <option value="2">2 Candles Ahead</option>
-  <option value="3">3 Candles Ahead</option>
-</select>
-
-<button onclick="start()">Start</button>
+  <button onclick="start()">Start</button>
 </header>
 
-<div id="timer">Timer: --</div>
+<div id="top">
+  <div id="timer">Timer: --</div>
+</div>
 
 <div id="chart"></div>
+
+<div id="next">Next Candle: --</div>
 
 <script>
 let interval;
@@ -94,59 +96,58 @@ let timeLeft;
 function start(){
   clearInterval(interval);
   document.getElementById("chart").innerHTML="";
-  let tf=parseInt(document.getElementById("timeframe").value);
-  let ahead=parseInt(document.getElementById("ahead").value);
-  timeLeft=tf;
+  let tf = parseInt(document.getElementById("timeframe").value);
+  timeLeft = tf;
 
-  generateCandles(ahead);
+  // initial candles
+  for(let i=0;i<18;i++){
+    addCandle();
+  }
 
-  interval=setInterval(()=>{
+  predictNext();
+
+  interval = setInterval(()=>{
     timeLeft--;
-    document.getElementById("timer").innerText="Timer: "+timeLeft+" sec";
+    document.getElementById("timer").innerText = "Timer: " + timeLeft + " sec";
 
-    if(timeLeft<=0){
-      shiftCandles(ahead);
-      timeLeft=tf;
+    if(timeLeft <= 0){
+      shiftCandle();
+      predictNext();
+      timeLeft = tf;
     }
   },1000);
 }
 
-function generateCandles(ahead){
-  for(let i=0;i<20;i++){
-    addCandle(false);
+function shiftCandle(){
+  let chart = document.getElementById("chart");
+  if(chart.children.length > 20){
+    chart.removeChild(chart.firstChild);
   }
-  for(let j=0;j<ahead;j++){
-    addCandle(true);
-  }
+  addCandle();
 }
 
-function shiftCandles(ahead){
-  let chart=document.getElementById("chart");
-  chart.removeChild(chart.firstChild);
-  addCandle(false);
+function addCandle(){
+  let chart = document.getElementById("chart");
+  let candle = document.createElement("div");
 
-  // remove old future
-  let futures=document.querySelectorAll(".future");
-  futures.forEach(f=>f.remove());
+  let isGreen = Math.random() > 0.5;
+  let height = Math.floor(Math.random()*120) + 40;
 
-  // add new future candles
-  for(let i=0;i<ahead;i++){
-    addCandle(true);
-  }
-}
-
-function addCandle(future){
-  let chart=document.getElementById("chart");
-  let candle=document.createElement("div");
-
-  let move=Math.random()>0.5;
-  let height=Math.floor(Math.random()*120)+30;
-
-  candle.className="candle"+(move?"":" red")+(future?" future":"");
-  candle.style.height=height+"px";
+  candle.className = "candle" + (isGreen ? "" : " red");
+  candle.style.height = height + "px";
   chart.appendChild(candle);
+}
+
+function predictNext(){
+  let green = Math.random() > 0.5;
+  let text = green ? "Next Candle: GREEN ⬆️" : "Next Candle: RED ⬇️";
+  let color = green ? "#2ecc71" : "#e74c3c";
+
+  let next = document.getElementById("next");
+  next.innerText = text;
+  next.style.color = color;
 }
 </script>
 
 </body>
- </html>                            
+</html>
