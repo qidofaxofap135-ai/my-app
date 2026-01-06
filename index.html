@@ -1,40 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Sky Earn</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color:white;
-  text-align:center;
+body{margin:0;font-family:Arial;background:#0f2027;color:#fff;text-align:center}
+.section{display:none;padding:25px}
+.show{display:block}
+input,select,button{
+ width:90%;max-width:320px;padding:12px;margin:8px;
+ border-radius:6px;border:none
 }
-.section{padding:40px 20px; display:none;}
-.show{display:block;}
-input,button{
-  width:90%;
-  max-width:300px;
-  padding:12px;
-  margin:8px;
-  border:none;
-  border-radius:6px;
-}
-button{
-  background:#00ffcc;
-  font-weight:bold;
-  font-size:16px;
-}
+button{background:#00ffcc;font-weight:bold}
+.menu button{width:45%;margin:5px}
 .card{
-  background:rgba(255,255,255,0.1);
-  margin:15px auto;
-  padding:20px;
-  border-radius:10px;
-  max-width:320px;
+ background:rgba(255,255,255,.12);
+ padding:15px;margin:15px auto;
+ border-radius:10px;max-width:350px
 }
+small{opacity:.8;word-break:break-all}
 </style>
 </head>
 
@@ -42,80 +28,129 @@ button{
 
 <!-- HOME -->
 <div id="home" class="section show">
-  <h1>Sky Earn</h1>
-  <p>Legal & Real Online Earning Platform</p>
-  <button onclick="showRegister()">Start Earning</button>
+<h1>Sky Earn</h1>
+<p>Online Earning Platform</p>
+<button onclick="go('register')">Start Earning</button>
 </div>
 
 <!-- REGISTER -->
 <div id="register" class="section">
-  <h2>Register</h2>
-  <input id="user" placeholder="Email or Phone">
-  <input id="pass" type="password" placeholder="Password">
-  <input id="cpass" type="password" placeholder="Confirm Password">
-  <button onclick="register()">Create Account</button>
+<h2>Register</h2>
+<input id="user" placeholder="Email or Phone">
+<input id="pass" type="password" placeholder="Password">
+<input id="cpass" type="password" placeholder="Confirm Password">
+<button onclick="register()">Register Now</button>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="section">
-  <h2>Dashboard</h2>
-  <p><b>Balance:</b> Rs <span id="balance">0</span></p>
-  <p><b>Active Package:</b> <span id="package">None</span></p>
+<h2>Dashboard</h2>
 
-  <div class="card">
-    <h3>Package 1</h3>
-    <p>Deposit: Rs 100</p>
-    <p>Daily Earning: Rs 50</p>
-    <button onclick="buyPackage(1)">Activate</button>
-  </div>
+<p><b>Balance:</b> Rs <span id="balance">0</span></p>
 
-  <div class="card">
-    <h3>Package 2</h3>
-    <p>Deposit: Rs 400</p>
-    <p>Daily Earning: Rs 150</p>
-    <button onclick="buyPackage(2)">Activate</button>
-  </div>
+<p><b>Referral Link:</b></p>
+<small id="ref"></small>
 
-  <h3>Customer Support</h3>
-  <p>📱 WhatsApp: 0307-7857478</p>
-  <p>📧 Email: aivibesstudio009@gmail.com</p>
+<div class="menu">
+<button onclick="showPlans()">Plans</button>
+<button onclick="go('withdraw')">Withdraw</button>
+<button onclick="go('support')">Support</button>
+</div>
+
+<div id="plans"></div>
+</div>
+
+<!-- WITHDRAW -->
+<div id="withdraw" class="section">
+<h2>Withdraw Request</h2>
+
+<p><b>Maximum Withdrawal:</b> Rs 300</p>
+<p><b>Processing Time:</b> 24 to 48 Hours</p>
+
+<select id="method">
+<option>JazzCash</option>
+<option>EasyPaisa</option>
+</select>
+
+<input placeholder="Your Name">
+<input placeholder="Mobile Number">
+
+<button onclick="withdraw()">Submit Withdraw</button>
+<p id="wmsg"></p>
+
+<button onclick="go('dashboard')">Back</button>
+</div>
+
+<!-- SUPPORT -->
+<div id="support" class="section">
+<h2>Support</h2>
+<p>📱 WhatsApp: 0307-7857478</p>
+<p>💳 JazzCash Payment</p>
+<p>Number: 03245549182</p>
+<p>Name: Jhandir Ahmed</p>
+<button onclick="go('dashboard')">Back</button>
 </div>
 
 <script>
-function showRegister(){
-  hideAll();
-  document.getElementById("register").classList.add("show");
+let plans=[
+{p:100,d:50},{p:400,d:150},{p:800,d:300},{p:1200,d:500},
+{p:2000,d:800},{p:3000,d:1200},{p:5000,d:2000},
+{p:8000,d:3500},{p:12000,d:5500},{p:20000,d:9000}
+];
+
+function go(id){
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('show'));
+ document.getElementById(id).classList.add('show');
 }
 
 function register(){
-  let p=document.getElementById("pass").value;
-  let cp=document.getElementById("cpass").value;
-  if(p!==cp){ alert("Password match nahi"); return; }
-  localStorage.setItem("balance",0);
-  localStorage.setItem("package","None");
-  showDashboard();
+ if(pass.value!==cpass.value){
+  alert("Password match nahi ho raha");
+  return;
+ }
+ localStorage.balance=0;
+ localStorage.ref=
+ "https://qidofaxofap135-ai.github.io/my-app/?ref="
+ +Math.floor(Math.random()*100000);
+ loadDash();
 }
 
-function showDashboard(){
-  hideAll();
-  document.getElementById("dashboard").classList.add("show");
-  document.getElementById("balance").innerText=localStorage.getItem("balance");
-  document.getElementById("package").innerText=localStorage.getItem("package");
+function loadDash(){
+ go('dashboard');
+ balance.innerText=localStorage.balance;
+ ref.innerText=localStorage.ref;
+ showPlans();
 }
 
-function buyPackage(p){
-  if(p==1){
-    localStorage.setItem("package","Package 1");
-    localStorage.setItem("balance",50);
-  }else{
-    localStorage.setItem("package","Package 2");
-    localStorage.setItem("balance",150);
-  }
-  showDashboard();
+function showPlans(){
+ let html="";
+ plans.forEach((pl,i)=>{
+  html+=`
+  <div class="card">
+   <h3>Plan ${i+1}</h3>
+   <p>Deposit: Rs ${pl.p}</p>
+   <p>Daily Earning: Rs ${pl.d}</p>
+   <button onclick="buy(${pl.d})">Buy Plan</button>
+  </div>`;
+ });
+ document.getElementById("plans").innerHTML=html;
 }
 
-function hideAll(){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("show"));
+function buy(d){
+ localStorage.balance=
+ parseInt(localStorage.balance)+d;
+ loadDash();
+}
+
+function withdraw(){
+ if(localStorage.balance<300){
+  wmsg.innerText="Minimum balance 300 Rs required";
+  return;
+ }
+ localStorage.balance=
+ parseInt(localStorage.balance)-300;
+ wmsg.innerText=
+ "Withdraw request submitted successfully";
 }
 </script>
 
