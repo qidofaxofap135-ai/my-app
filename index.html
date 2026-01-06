@@ -1,26 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Sky Earn</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f2027">
+
 <style>
-body{margin:0;font-family:Arial;background:#0f2027;color:#fff;text-align:center}
-.section{display:none;padding:25px}
+body{
+ margin:0;font-family:Arial;
+ background:#0f2027;color:#fff;
+ padding-bottom:70px
+}
+.section{display:none;padding:20px;text-align:center}
 .show{display:block}
+
 input,select,button{
- width:90%;max-width:320px;padding:12px;margin:8px;
+ width:90%;max-width:330px;
+ padding:12px;margin:8px;
  border-radius:6px;border:none
 }
-button{background:#00ffcc;font-weight:bold;cursor:pointer}
-.menu button{width:45%;margin:5px}
+button{background:#00ffcc;font-weight:bold}
+
 .card{
  background:rgba(255,255,255,.12);
  padding:15px;margin:15px auto;
- border-radius:10px;max-width:350px
+ border-radius:10px;max-width:360px
 }
-small{opacity:.85;word-break:break-word;display:block;margin:5px}
+small{opacity:.85}
+
+/* Bottom Menu */
+.bottom{
+ position:fixed;bottom:0;left:0;
+ width:100%;background:#203a43;
+ display:flex;justify-content:space-around;
+ padding:10px 0
+}
+.bottom button{
+ width:22%;padding:10px;
+ font-size:12px;border-radius:20px
+}
 </style>
 </head>
 
@@ -30,70 +52,62 @@ small{opacity:.85;word-break:break-word;display:block;margin:5px}
 <div id="home" class="section show">
 <h1>Sky Earn</h1>
 <p>Online Earning Platform</p>
+
 <button onclick="go('register')">Start Earning</button>
+<button id="installBtn" style="display:none">📥 Install App</button>
 </div>
 
 <!-- REGISTER -->
 <div id="register" class="section">
 <h2>Register</h2>
-<input placeholder="Email or Phone">
-<input id="pass" type="password" placeholder="Password">
-<input id="cpass" type="password" placeholder="Confirm Password">
-<button onclick="register()">Register Now</button>
+<input placeholder="Phone Number">
+<input placeholder="Gmail">
+<input type="password" placeholder="Password">
+<button onclick="go('verify')">Send 6 Digit Code</button>
+</div>
+
+<!-- VERIFY -->
+<div id="verify" class="section">
+<h2>Verification</h2>
+<input id="code" placeholder="6 Digit Code">
+<p><small>Demo Code: <b>123456</b></small></p>
+<button onclick="verify()">Verify & Complete</button>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="section">
 <h2>Dashboard</h2>
-
 <p><b>Balance:</b> Rs <span id="balance">0</span></p>
 
-<p><b>Referral Bonus:</b> Rs 10</p>
-<p>Jab aapka referral koi plan buy karega to aapko <b>Rs 50</b> milenge</p>
+<p><b>Your Referral Link</b></p>
+<input id="reflink" readonly>
+<button onclick="copyLink()">Copy Link</button>
 
-<p><b>Your Referral Link:</b></p>
-<small id="ref"></small>
+<p><small>
+Referral Bonus ₹10 on join<br>
+Referral plan buy bonus ₹50
+</small></p>
 
-<button onclick="copyRef()">Copy Link</button>
-<p id="copyMsg"></p>
-
-<p><b>Referral Joined:</b> <span id="refCount">0</span></p>
-<p>Aap ke link se <b><span id="refCount2">0</span></b> bande bane hain</p>
-
-<div class="menu">
-<button onclick="showPlans()">Plans</button>
-<button onclick="go('withdraw')">Withdraw</button>
-<button onclick="go('support')">Support</button>
-</div>
+<p><small>Total Referrals: <span id="refcount">0</span></small></p>
 
 <div id="plans"></div>
 </div>
 
-<!-- PAYMENT -->
-<div id="payment" class="section">
+<!-- PLAN PAYMENT -->
+<div id="pay" class="section">
 <h2>Plan Payment</h2>
-
-<p><b>Payment Method:</b> JazzCash</p>
-<p><b>JazzCash Number:</b> 03245549182</p>
-<p><b>Account Name:</b> Jhandir Ahmed</p>
-
-<p>
-Payment JazzCash hone ke baad<br>
-<b>is number par screenshot bhejen:</b>
-</p>
-
-<p><b>WhatsApp:</b> 0307-7857478</p>
-
-<button onclick="confirmBuy()">I Have Paid</button>
-<button onclick="go('dashboard')">Back to Dashboard</button>
+<p><b>JazzCash:</b> 03245549182</p>
+<p><b>Name:</b> Jhandir Ahmed</p>
+<p>Payment ke baad screenshot bhejen</p>
+<p><b>WhatsApp: 03077857478</b></p>
+<button onclick="confirmPlan()">I Have Paid</button>
 </div>
 
 <!-- WITHDRAW -->
 <div id="withdraw" class="section">
-<h2>Withdraw Request</h2>
-
-<p><b>Maximum Withdrawal:</b> Rs 300</p>
-<p><b>Processing Time:</b> 24 to 48 Hours</p>
+<h2>Withdraw</h2>
+<p>Max Withdrawal Rs 300</p>
+<p>Processing Time 24–48 Hours</p>
 
 <select>
 <option>JazzCash</option>
@@ -103,105 +117,111 @@ Payment JazzCash hone ke baad<br>
 <input placeholder="Your Name">
 <input placeholder="Mobile Number">
 
-<button onclick="withdraw()">Submit Withdraw</button>
+<button onclick="withdraw()">Submit</button>
 <p id="wmsg"></p>
-
-<button onclick="go('dashboard')">Back</button>
 </div>
 
 <!-- SUPPORT -->
 <div id="support" class="section">
 <h2>Support</h2>
-<p>📱 WhatsApp: 0307-7857478</p>
-<p>💳 JazzCash Payment</p>
-<p>Number: 03245549182</p>
-<p>Name: Jhandir Ahmed</p>
-<button onclick="go('dashboard')">Back</button>
+<p>📞 0307-7857478</p>
+<p>📧 aivibesstudio009@gmail.com</p>
+</div>
+
+<!-- BOTTOM MENU -->
+<div class="bottom">
+<button onclick="go('dashboard')">Home</button>
+<button onclick="showPlans()">Plans</button>
+<button onclick="go('withdraw')">Withdraw</button>
+<button onclick="go('support')">Support</button>
 </div>
 
 <script>
+/* ---------- APP LOGIC ---------- */
 let plans=[
-{p:100,d:50},{p:400,d:150},{p:800,d:300},{p:1200,d:500},
-{p:2000,d:800},{p:3000,d:1200},{p:5000,d:2000},
-{p:8000,d:3500},{p:12000,d:5500},{p:20000,d:9000}
+{p:100,d:50},{p:400,d:150},{p:800,d:300},
+{p:1200,d:500},{p:2000,d:800}
 ];
-
-let selectedDaily=0;
+let currentDaily=0;
 
 function go(id){
  document.querySelectorAll('.section').forEach(s=>s.classList.remove('show'));
  document.getElementById(id).classList.add('show');
 }
 
-function register(){
- if(pass.value!==cpass.value){
-  alert("Password match nahi ho raha");
-  return;
+function verify(){
+ if(code.value!=="123456"){alert("Wrong Code");return;}
+ if(!localStorage.reg){
+  localStorage.balance=10;
+  localStorage.refcount=0;
+  localStorage.reg=1;
  }
- localStorage.balance=0;
- localStorage.refCount=localStorage.refCount || 0;
- localStorage.ref=
- "https://qidofaxofap135-ai.github.io/my-app/?ref="
- +Math.floor(Math.random()*100000);
+ localStorage.ref="https://qidofaxofap135-ai.github.io/my-app/?ref="+Math.floor(Math.random()*99999);
  loadDash();
 }
 
 function loadDash(){
  go('dashboard');
  balance.innerText=localStorage.balance;
- ref.innerText=localStorage.ref;
- refCount.innerText=localStorage.refCount;
- refCount2.innerText=localStorage.refCount;
- copyMsg.innerText="";
+ reflink.value=localStorage.ref;
+ refcount.innerText=localStorage.refcount;
  showPlans();
 }
 
 function showPlans(){
+ go('dashboard');
  let html="";
  plans.forEach((pl,i)=>{
-  html+=`
-  <div class="card">
-   <h3>Plan ${i+1}</h3>
-   <p>Deposit: Rs ${pl.p}</p>
-   <p>Daily Earning: Rs ${pl.d}</p>
-   <button onclick="buyPlan(${pl.d})">Buy Plan</button>
+  html+=`<div class="card">
+  <h3>Plan ${i+1}</h3>
+  <p>Deposit Rs ${pl.p}</p>
+  <p>Daily Earn Rs ${pl.d}</p>
+  <button onclick="buy(${pl.d})">Buy Plan</button>
   </div>`;
  });
  document.getElementById("plans").innerHTML=html;
 }
 
-function buyPlan(d){
- selectedDaily=d;
- go('payment');
+function buy(d){
+ currentDaily=d;
+ go('pay');
 }
 
-function confirmBuy(){
- localStorage.balance=
- parseInt(localStorage.balance)+selectedDaily;
-
- // demo referral count increase
- localStorage.refCount =
- parseInt(localStorage.refCount) + 1;
-
- alert("Payment received (demo).");
+function confirmPlan(){
+ localStorage.balance=parseInt(localStorage.balance)+currentDaily;
+ alert("Plan Activated");
  loadDash();
 }
 
 function withdraw(){
  if(localStorage.balance<300){
-  wmsg.innerText="Minimum balance 300 Rs required";
+  wmsg.innerText="Minimum 300 required";
   return;
  }
- localStorage.balance=
- parseInt(localStorage.balance)-300;
- wmsg.innerText="Withdraw request submitted successfully";
+ localStorage.balance-=300;
+ wmsg.innerText="Withdraw request submitted";
 }
 
-function copyRef(){
- navigator.clipboard.writeText(localStorage.ref);
- copyMsg.innerText="Link copy ho gaya ✅";
+function copyLink(){
+ navigator.clipboard.writeText(reflink.value);
+ alert("Referral link copied");
 }
+
+/* ---------- INSTALL APP (PWA) ---------- */
+let deferredPrompt;
+const installBtn=document.getElementById("installBtn");
+
+window.addEventListener("beforeinstallprompt",(e)=>{
+ e.preventDefault();
+ deferredPrompt=e;
+ installBtn.style.display="inline-block";
+});
+
+installBtn.addEventListener("click",()=>{
+ deferredPrompt.prompt();
+ deferredPrompt.userChoice.then(()=>{deferredPrompt=null});
+});
 </script>
 
 </body>
- </html>
+                                </html>
