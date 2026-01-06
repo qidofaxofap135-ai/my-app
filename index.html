@@ -1,101 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Sky Earn - Online Earning</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Sky Earn</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: white;
-            text-align: center;
-        }
-
-        header {
-            padding: 40px 20px;
-        }
-
-        h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 15px 30px;
-            background: #00ffcc;
-            color: #000;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 30px;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            background: #00ccaa;
-        }
-
-        section {
-            padding: 30px 20px;
-        }
-
-        .support {
-            background: rgba(255,255,255,0.1);
-            margin: 30px 15px;
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        .support a {
-            color: #00ffcc;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        footer {
-            margin-top: 40px;
-            padding: 20px;
-            font-size: 14px;
-            opacity: 0.8;
-        }
-    </style>
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:white;
+  text-align:center;
+}
+.section{padding:40px 20px; display:none;}
+.show{display:block;}
+input,button{
+  width:90%;
+  max-width:300px;
+  padding:12px;
+  margin:8px;
+  border:none;
+  border-radius:6px;
+}
+button{
+  background:#00ffcc;
+  font-weight:bold;
+  font-size:16px;
+}
+.card{
+  background:rgba(255,255,255,0.1);
+  margin:15px auto;
+  padding:20px;
+  border-radius:10px;
+  max-width:320px;
+}
+</style>
 </head>
 
 <body>
 
-<header>
-    <h1>Sky Earn</h1>
-    <p>Legal & Real Online Earning Platform</p>
+<!-- HOME -->
+<div id="home" class="section show">
+  <h1>Sky Earn</h1>
+  <p>Legal & Real Online Earning Platform</p>
+  <button onclick="showRegister()">Start Earning</button>
+</div>
 
-    <!-- WORKING BUTTON -->
-    <a href="#earn" class="btn">Start Earning</a>
-</header>
+<!-- REGISTER -->
+<div id="register" class="section">
+  <h2>Register</h2>
+  <input id="user" placeholder="Email or Phone">
+  <input id="pass" type="password" placeholder="Password">
+  <input id="cpass" type="password" placeholder="Confirm Password">
+  <button onclick="register()">Create Account</button>
+</div>
 
-<section id="earn">
-    <h2>How You Can Earn</h2>
-    <p>✔ Daily tasks complete karo</p>
-    <p>✔ Referral se earning barhao</p>
-    <p>✔ Secure & Fast Withdrawals</p>
-</section>
+<!-- DASHBOARD -->
+<div id="dashboard" class="section">
+  <h2>Dashboard</h2>
+  <p><b>Balance:</b> Rs <span id="balance">0</span></p>
+  <p><b>Active Package:</b> <span id="package">None</span></p>
 
-<section class="support">
-    <h2>Customer Support</h2>
-    <p>📞 WhatsApp: <a href="https://wa.me/923077857478" target="_blank">0307-7857478</a></p>
-    <p>📧 Email: <a href="mailto:aivibesstudio009@gmail.com">aivibesstudio009@gmail.com</a></p>
-</section>
+  <div class="card">
+    <h3>Package 1</h3>
+    <p>Deposit: Rs 100</p>
+    <p>Daily Earning: Rs 50</p>
+    <button onclick="buyPackage(1)">Activate</button>
+  </div>
 
-<footer>
-    <p>© 2026 Sky Earn. All Rights Reserved.</p>
-</footer>
+  <div class="card">
+    <h3>Package 2</h3>
+    <p>Deposit: Rs 400</p>
+    <p>Daily Earning: Rs 150</p>
+    <button onclick="buyPackage(2)">Activate</button>
+  </div>
+
+  <h3>Customer Support</h3>
+  <p>📱 WhatsApp: 0307-7857478</p>
+  <p>📧 Email: aivibesstudio009@gmail.com</p>
+</div>
+
+<script>
+function showRegister(){
+  hideAll();
+  document.getElementById("register").classList.add("show");
+}
+
+function register(){
+  let p=document.getElementById("pass").value;
+  let cp=document.getElementById("cpass").value;
+  if(p!==cp){ alert("Password match nahi"); return; }
+  localStorage.setItem("balance",0);
+  localStorage.setItem("package","None");
+  showDashboard();
+}
+
+function showDashboard(){
+  hideAll();
+  document.getElementById("dashboard").classList.add("show");
+  document.getElementById("balance").innerText=localStorage.getItem("balance");
+  document.getElementById("package").innerText=localStorage.getItem("package");
+}
+
+function buyPackage(p){
+  if(p==1){
+    localStorage.setItem("package","Package 1");
+    localStorage.setItem("balance",50);
+  }else{
+    localStorage.setItem("package","Package 2");
+    localStorage.setItem("balance",150);
+  }
+  showDashboard();
+}
+
+function hideAll(){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("show"));
+}
+</script>
 
 </body>
 </html>
