@@ -1,181 +1,152 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-<meta charset="UTF-8">  
-<title>Sky Earn</title>  
-<meta name="viewport" content="width=device-width, initial-scale=1">  <link rel="manifest" href="manifest.json">  
-<meta name="theme-color" content="#0f2027">  <style>  
-body{  
- margin:0;font-family:Arial;  
- background:#0f2027;color:#fff;  
- padding-bottom:70px  
-}  
-.section{display:none;padding:20px;text-align:center}  
-.show{display:block}  
-  
-input,select,button{  
- width:90%;max-width:330px;  
- padding:12px;margin:8px;  
- border-radius:6px;border:none  
-}  
-button{background:#00ffcc;font-weight:bold}  
-  
-.card{  
- background:rgba(255,255,255,.12);  
- padding:15px;margin:15px auto;  
- border-radius:10px;max-width:360px  
-}  
-small{opacity:.85}  
-  
-.bottom{  
- position:fixed;bottom:0;left:0;  
- width:100%;background:#203a43;  
- display:flex;justify-content:space-around;  
- padding:10px 0  
-}  
-.bottom button{  
- width:22%;padding:10px;  
- font-size:12px;border-radius:20px  
-}  
-</style>  </head>  <body>  <!-- HOME -->  <div id="home" class="section show">  
-<h1>Sky Earn</h1>  
-<p>Online Earning Platform</p>  
-<button onclick="go('login')">Login</button>  
-<button onclick="go('signup')">Sign Up</button>  
-<button id="installBtn" style="display:none">📥 Install App</button>  
-</div>  <!-- LOGIN -->  <div id="login" class="section">  
-<h2>Login</h2>  
-<input placeholder="Phone or Gmail">  
-<input type="password" placeholder="Password">  
-<button onclick="loadDash()">Login</button>  
-<button onclick="go('signup')">Create New Account</button>  
-</div>  <!-- SIGN UP -->  <div id="signup" class="section">  
-<h2>Sign Up</h2>  
-<input placeholder="Phone Number">  
-<input placeholder="Gmail">  
-<input type="password" placeholder="Password">  
-<button onclick="go('verify')">Send 6 Digit Code</button>  
-</div>  <!-- VERIFY -->  <div id="verify" class="section">  
-<h2>Verification</h2>  
-<input id="code" placeholder="6 Digit Code">  
-<p><small>Demo Code: <b>786900</b></small></p>  
-<button onclick="verify()">Verify & Complete</button>  
-</div>  <!-- DASHBOARD -->  <div id="dashboard" class="section">  
-<h2>Dashboard</h2>  
-<p><b>Balance:</b> Rs <span id="balance">0</span></p>  <p><b>Your Referral Link</b></p>  
-<input id="reflink" readonly>  
-<button onclick="copyLink()">Copy Link</button>  <p><small>  
-Referral Bonus Rs10 on join<br>  
-Referral plan buy bonus Rs50  
-</small></p>  <p><small>Total Referrals: <span id="refcount">0</span></small></p>  <div id="plans"></div>  
-</div>  <!-- PLAN PAYMENT -->  <div id="pay" class="section">  
-<h2>Plan Payment</h2>  
-<p><b>JazzCash:</b> 03245549182</p>  
-<p><b>Name:</b> Jhandir Ahmed</p>  
-<p>Payment ke baad screenshot bhejen</p>  
-<p><b>WhatsApp: 03077857478</b></p>  
-<button onclick="confirmPlan()">I Have Paid</button>  
-</div>  <!-- WITHDRAW -->  <div id="withdraw" class="section">  
-<h2>Withdraw</h2>  
-<p>Max Withdrawal Rs 300</p>  
-<p>Processing Time 24–48 Hours</p>  <select>  
-<option>JazzCash</option>  
-<option>EasyPaisa</option>  
-</select>  <input placeholder="Your Name">  
-<input placeholder="Mobile Number">  <button onclick="withdraw()">Submit</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quotex Candle Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<p id="wmsg"></p>  
-</div>  <!-- SUPPORT -->  <div id="support" class="section">  
-<h2>Support</h2>  
-<p>📞 0307-7857478</p>  
-<p>📧 aivibesstudio009@gmail.com</p>  
-</div>  <!-- BOTTOM MENU -->  <div class="bottom">  
-<button onclick="loadDash()">Home</button>  
-<button onclick="showPlans()">Plans</button>  
-<button onclick="go('withdraw')">Withdraw</button>  
-<button onclick="go('support')">Support</button>  
-</div>  <script>  
-let plans=[  
-{p:100,d:50},{p:400,d:150},{p:800,d:300},  
-{p:1200,d:500},{p:2000,d:800}  
-];  
-let currentDaily=0;  
-  
-function go(id){  
- document.querySelectorAll('.section').forEach(s=>s.classList.remove('show'));  
- document.getElementById(id).classList.add('show');  
-}  
-  
-function verify(){  
- if(code.value!=="123456"){alert("Wrong Code");return;}  
- if(!localStorage.reg){  
-  localStorage.balance=10;  
-  localStorage.refcount=0;  
-  localStorage.reg=1;  
- }  
- localStorage.ref="https://qidofaxofap135-ai.github.io/my-app/?ref="+Math.floor(Math.random()*99999);  
- loadDash();  
-}  
-  
-function loadDash(){  
- go('dashboard');  
- balance.innerText=localStorage.balance || 0;  
- reflink.value=localStorage.ref || "";  
- refcount.innerText=localStorage.refcount || 0;  
- showPlans();  
-}  
-  
-function showPlans(){  
- go('dashboard');  
- let html="";  
- plans.forEach((pl,i)=>{  
-  html+=`<div class="card">  
-  <h3>Plan ${i+1}</h3>  
-  <p>Deposit Rs ${pl.p}</p>  
-  <p>Daily Earn Rs ${pl.d}</p>  
-  <button onclick="buy(${pl.d})">Buy Plan</button>  
-  </div>`;  
- });  
- document.getElementById("plans").innerHTML=html;  
-}  
-  
-function buy(d){  
- currentDaily=d;  
- go('pay');  
-}  
-  
-function confirmPlan(){  
- localStorage.balance=parseInt(localStorage.balance)+currentDaily;  
- alert("Plan Activated");  
- loadDash();  
-}  
-  
-function withdraw(){  
- if(localStorage.balance<300){  
-  wmsg.innerText="Minimum 300 required";  
-  return;  
- }  
- localStorage.balance-=300;  
- wmsg.innerText="Withdraw request submitted";  
-}  
-  
-function copyLink(){  
- navigator.clipboard.writeText(reflink.value);  
- alert("Referral link copied");  
-}  
-  
-/* INSTALL APP */  
-let deferredPrompt;  
-const installBtn=document.getElementById("installBtn");  
-  
-window.addEventListener("beforeinstallprompt",(e)=>{  
- e.preventDefault();  
- deferredPrompt=e;  
- installBtn.style.display="inline-block";  
-});  
-  
-installBtn.addEventListener("click",()=>{  
- deferredPrompt.prompt();  
- deferredPrompt.userChoice.then(()=>{deferredPrompt=null});  
-});  
-</script>  </body>  
-                                                                                                    </html>
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0f2027;
+  color:#fff;
+}
+header{
+  background:#203a43;
+  padding:10px;
+  text-align:center;
+}
+select,button{
+  padding:6px;
+  margin:4px;
+  border:none;
+  border-radius:4px;
+}
+#timer{
+  text-align:center;
+  font-size:18px;
+  margin-top:5px;
+}
+#chart{
+  display:flex;
+  align-items:flex-end;
+  height:230px;
+  background:#09161d;
+  margin:10px;
+  padding:5px;
+  overflow:hidden;
+}
+.candle{
+  width:10px;
+  margin:2px;
+  background:#2ecc71;
+}
+.candle.red{
+  background:#e74c3c;
+}
+.future{
+  opacity:0.5;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h3>📊 Quotex Candle Demo (Practice)</h3>
+
+<select id="market">
+  <option>EUR/USD</option>
+  <option>GBP/USD</option>
+  <option>USD/JPY</option>
+  <option>AUD/CAD</option>
+  <option>EUR/JPY</option>
+  <option>GBP/JPY</option>
+  <option>USD/PKR OTC</option>
+  <option>EUR/USD OTC</option>
+  <option>GBP/USD OTC</option>
+</select>
+
+<select id="timeframe">
+  <option value="5">5 Seconds</option>
+  <option value="10">10 Seconds</option>
+  <option value="30">30 Seconds</option>
+  <option value="60">1 Minute</option>
+</select>
+
+<select id="ahead">
+  <option value="2">2 Candles Ahead</option>
+  <option value="3">3 Candles Ahead</option>
+</select>
+
+<button onclick="start()">Start</button>
+</header>
+
+<div id="timer">Timer: --</div>
+
+<div id="chart"></div>
+
+<script>
+let interval;
+let timeLeft;
+
+function start(){
+  clearInterval(interval);
+  document.getElementById("chart").innerHTML="";
+  let tf=parseInt(document.getElementById("timeframe").value);
+  let ahead=parseInt(document.getElementById("ahead").value);
+  timeLeft=tf;
+
+  generateCandles(ahead);
+
+  interval=setInterval(()=>{
+    timeLeft--;
+    document.getElementById("timer").innerText="Timer: "+timeLeft+" sec";
+
+    if(timeLeft<=0){
+      shiftCandles(ahead);
+      timeLeft=tf;
+    }
+  },1000);
+}
+
+function generateCandles(ahead){
+  for(let i=0;i<20;i++){
+    addCandle(false);
+  }
+  for(let j=0;j<ahead;j++){
+    addCandle(true);
+  }
+}
+
+function shiftCandles(ahead){
+  let chart=document.getElementById("chart");
+  chart.removeChild(chart.firstChild);
+  addCandle(false);
+
+  // remove old future
+  let futures=document.querySelectorAll(".future");
+  futures.forEach(f=>f.remove());
+
+  // add new future candles
+  for(let i=0;i<ahead;i++){
+    addCandle(true);
+  }
+}
+
+function addCandle(future){
+  let chart=document.getElementById("chart");
+  let candle=document.createElement("div");
+
+  let move=Math.random()>0.5;
+  let height=Math.floor(Math.random()*120)+30;
+
+  candle.className="candle"+(move?"":" red")+(future?" future":"");
+  candle.style.height=height+"px";
+  chart.appendChild(candle);
+}
+</script>
+
+</body>
+ </html>                            
