@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Live Candle Demo</title>
+<title>Quotex Style Live Candle Demo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -11,18 +11,33 @@ body{
   background:#0f2027;
   color:#fff;
   font-family:Arial;
-  overflow:hidden;
+}
+
+#top{
+  padding:10px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  background:#122b33;
+}
+
+select{
+  background:#0f2027;
+  color:#fff;
+  border:1px solid #2c5364;
+  padding:6px;
 }
 
 #chart{
   position:relative;
-  height:100vh;
+  height:70vh;
   padding:20px;
+  overflow:hidden;
 }
 
 .candle{
   position:absolute;
-  bottom:100px;
+  bottom:80px;
   width:12px;
 }
 
@@ -36,76 +51,137 @@ body{
   position:absolute;
   width:2px;
   left:5px;
-  background:#ccc;
-}
-
-.green{ background:#2ecc71; }
-.red{ background:#e74c3c; }
-
-.price-line{
-  position:absolute;
-  left:0;
-  right:0;
-  height:1px;
   background:#aaa;
-  opacity:0.4;
 }
+
+.green{background:#2ecc71;}
+.red{background:#e74c3c;}
+
+#bottom{
+  padding:15px;
+  background:#122b33;
+}
+
+.btn{
+  width:48%;
+  padding:12px;
+  font-size:18px;
+  border:none;
+  color:#fff;
+  border-radius:6px;
+}
+
+.up{background:#1abc9c;}
+.down{background:#e74c3c;}
 
 .info{
-  position:fixed;
-  top:10px;
-  left:10px;
   font-size:14px;
   opacity:0.8;
+  margin-top:5px;
 }
 </style>
 </head>
 
 <body>
-<div class="info">LIVE Candle Demo (Quotex Style)</div>
+
+<div id="top">
+  <select id="market">
+    <option>USD/PKR (OTC)</option>
+    <option>AUD/CAD</option>
+    <option>EUR/USD</option>
+    <option>GBP/USD</option>
+  </select>
+
+  <select id="timeframe">
+    <option value="1000">5 Seconds</option>
+    <option value="2000">10 Seconds</option>
+    <option value="5000">1 Minute</option>
+  </select>
+
+  <div id="timer">⏱ 5</div>
+</div>
+
 <div id="chart"></div>
+
+<div id="bottom">
+  <div class="info" id="prediction">Next Candle: --</div>
+  <br>
+  <button class="btn down">Down ⬇</button>
+  <button class="btn up">Up ⬆</button>
+</div>
 
 <script>
 const chart = document.getElementById("chart");
-let candles = [];
-let basePrice = 289.2;
-let x = 40;
+const tf = document.getElementById("timeframe");
+const timerBox = document.getElementById("timer");
+const predictionBox = document.getElementById("prediction");
+
+let candles=[];
+let basePrice=289;
+let x=30;
+let interval=1000;
+let countdown=5;
+
+function nextPrediction(){
+  predictionBox.innerText =
+   "Next Candle: " + (Math.random()>0.5?"Green 🟢":"Red 🔴");
+}
 
 function createCandle(){
-  let open = basePrice;
-  let close = open + (Math.random()-0.5)*0.15;
-  let high = Math.max(open,close) + Math.random()*0.1;
-  let low  = Math.min(open,close) - Math.random()*0.1;
+  let open=basePrice;
+  let close=open+(Math.random()-0.5)*0.2;
+  let high=Math.max(open,close)+Math.random()*0.1;
+  let low=Math.min(open,close)-Math.random()*0.1;
+  basePrice=close;
 
-  basePrice = close;
+  const candle=document.createElement("div");
+  candle.className="candle";
+  candle.style.left=x+"px";
 
-  const candle = document.createElement("div");
-  candle.className = "candle";
-  candle.style.left = x+"px";
-
-  const wick = document.createElement("div");
+  const wick=document.createElement("div");
   wick.className="wick";
-  wick.style.height = (high-low)*800+"px";
-  wick.style.bottom = (low-289)*800+120+"px";
+  wick.style.height=(high-low)*600+"px";
+  wick.style.bottom=(low-288)*600+100+"px";
 
-  const body = document.createElement("div");
-  body.className = "body "+(close>=open?"green":"red");
-  body.style.height = Math.abs(close-open)*800+"px";
-  body.style.bottom = (Math.min(open,close)-289)*800+120+"px";
+  const body=document.createElement("div");
+  body.className="body "+(close>=open?"green":"red");
+  body.style.height=Math.abs(close-open)*600+"px";
+  body.style.bottom=(Math.min(open,close)-288)*600+100+"px";
 
   candle.appendChild(wick);
   candle.appendChild(body);
   chart.appendChild(candle);
 
   candles.push(candle);
-  x += 20;
+  x+=20;
 
-  if(candles.length>25){
+  if(candles.length>22){
     chart.removeChild(candles.shift());
   }
+
+  nextPrediction();
 }
 
-setInterval(createCandle,1000);
+function start(){
+  clearInterval(window.loop);
+  interval=parseInt(tf.value);
+  countdown=interval/1000;
+
+  window.loop=setInterval(()=>{
+    createCandle();
+    countdown=interval/1000;
+  },interval);
+
+  setInterval(()=>{
+    countdown--;
+    if(countdown<0) countdown=interval/1000;
+    timerBox.innerText="⏱ "+countdown;
+  },1000);
+}
+
+tf.onchange=start;
+start();
 </script>
+
 </body>
 </html>
