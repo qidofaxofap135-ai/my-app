@@ -1,9 +1,199 @@
-{
-  "name": "Sky Earn",
-  "short_name": "SkyEarn",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#0f2027",
-  "theme_color": "#0f2027",
-  "icons": []
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pro Trading UI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#0f2027;
+  --card:#0b1a20;
+  --text:#ffffff;
+  --up:#2ecc71;
+  --down:#e74c3c;
 }
+
+.light{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --text:#000000;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial, sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:80px;
+}
+
+header{
+  background:var(--card);
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+header h1{
+  font-size:18px;
+}
+
+.toggle{
+  cursor:pointer;
+  padding:6px 10px;
+  border-radius:6px;
+  background:#444;
+  font-size:14px;
+}
+
+.container{
+  padding:15px;
+}
+
+/* LOGIN */
+.login-box{
+  background:var(--card);
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+}
+
+/* CHART */
+.chart-box{
+  background:var(--card);
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:15px;
+}
+
+.info{
+  text-align:center;
+  padding:10px;
+}
+
+.signal{
+  font-weight:bold;
+}
+
+/* ACTION BUTTONS */
+.actions{
+  display:flex;
+  gap:15px;
+}
+
+.up{background:var(--up); color:#fff;}
+.down{background:var(--down); color:#fff;}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Pro Trading UI</h1>
+  <div class="toggle" onclick="toggleTheme()">🌙 / ☀️</div>
+</header>
+
+<div class="container">
+
+<!-- LOGIN UI -->
+<div class="login-box" id="loginBox">
+  <h3>Login</h3>
+  <input placeholder="Phone / Email">
+  <input placeholder="OTP Code">
+  <button onclick="login()">Verify</button>
+</div>
+
+<!-- TRADING UI -->
+<div id="tradeUI" style="display:none">
+
+  <!-- TradingView Embed -->
+  <div class="chart-box">
+    <iframe src="https://www.tradingview.com/widgetembed/?symbol=FX:USDJPY&interval=1&theme=dark&style=1&locale=en"
+    width="100%" height="320" frameborder="0"></iframe>
+  </div>
+
+  <div class="info">
+    ⏱ Timer: <span id="timer">60</span>s <br>
+    📢 Signal: <span id="signal" class="signal">WAIT</span>
+  </div>
+
+  <div class="actions">
+    <button class="down">Down ↓</button>
+    <button class="up">Up ↑</button>
+  </div>
+</div>
+
+</div>
+
+<audio id="soundUp">
+  <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">
+</audio>
+
+<audio id="soundDown">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+
+<script>
+let time = 60;
+
+function login(){
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("tradeUI").style.display="block";
+}
+
+function toggleTheme(){
+  document.body.classList.toggle("light");
+}
+
+setInterval(()=>{
+  time--;
+  document.getElementById("timer").textContent=time;
+
+  if(time<=0){
+    generateSignal();
+    time=60;
+  }
+},1000);
+
+function generateSignal(){
+  let s = Math.random()>0.5 ? "UP" : "DOWN";
+  let el = document.getElementById("signal");
+
+  if(s==="UP"){
+    el.textContent="UP";
+    el.style.color="var(--up)";
+    document.getElementById("soundUp").play();
+  }else{
+    el.textContent="DOWN";
+    el.style.color="var(--down)";
+    document.getElementById("soundDown").play();
+  }
+}
+</script>
+
+</body>
+</html>
