@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OTC Candle Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  font-family:Arial, sans-serif;
+}
+
+/* top bar */
+.topbar{
+  background:#1c1c1c;
+  padding:10px;
+  display:flex;
+  gap:10px;
+}
+select{
+  background:#222;
+  color:#fff;
+  border:1px solid #444;
+  padding:6px;
+  border-radius:4px;
+}
+
+/* chart */
+.chart-wrap{
+  position:relative;
+  height:320px;
+  background:#000;
+  overflow:hidden;
+}
+.chart{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:100%;
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  padding:15px;
+}
+
+/* candle */
+.candle{
+  position:relative;
+  width:14px;
+}
+.wick{
+  position:absolute;
+  width:2px;
+  left:6px;
+  background:#aaa;
+}
+.body{
+  position:absolute;
+  width:100%;
+}
+.green{ background:#00ff6a; }
+.red{ background:#ff4040; }
+.white{ background:#ffffff; }
+
+/* expiry line */
+.expiry{
+  position:absolute;
+  top:0;
+  bottom:0;
+  right:45px;
+  border-left:2px dashed #aaa;
+}
+
+/* timer */
+.timer{
+  position:absolute;
+  right:6px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:16px;
+}
+
+/* bottom */
+.bottom{
+  padding:10px;
+  background:#111;
+  text-align:center;
+}
+button{
+  width:45%;
+  padding:12px;
+  font-size:18px;
+  border:none;
+  border-radius:6px;
+  margin:5px;
+}
+.up{ background:#00c97a; }
+.down{ background:#e74c3c; }
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <select>
+    <option>USD/PKR (OTC)</option>
+    <option>EUR/USD (OTC)</option>
+    <option>AUD/CAD (OTC)</option>
+  </select>
+
+  <select id="tf">
+    <option value="5">5 Seconds</option>
+    <option value="10">10 Seconds</option>
+    <option value="60" selected>1 Minute</option>
+  </select>
+</div>
+
+<div class="chart-wrap">
+  <div class="expiry"></div>
+  <div class="timer" id="timer">00:60</div>
+  <div class="chart" id="chart"></div>
+</div>
+
+<div class="bottom">
+  <div>Signal: <b id="signal">--</b></div>
+  <button class="down">Down ↓</button>
+  <button class="up">Up ↑</button>
+</div>
+
+<script>
+const chart = document.getElementById("chart");
+const timerEl = document.getElementById("timer");
+const tf = document.getElementById("tf");
+const signalEl = document.getElementById("signal");
+
+let seconds = parseInt(tf.value);
+
+tf.onchange = () => {
+  seconds = parseInt(tf.value);
+};
+
+function addCandle(){
+  const candle = document.createElement("div");
+  candle.className="candle";
+
+  const wick = document.createElement("div");
+  wick.className="wick";
+  const wickH = 60 + Math.random()*120;
+  wick.style.height = wickH+"px";
+  wick.style.bottom="0";
+
+  const body = document.createElement("div");
+  const colors = ["green","red","white"];
+  const color = colors[Math.floor(Math.random()*colors.length)];
+  body.className = "body "+color;
+
+  const bodyH = 30 + Math.random()*90;
+  body.style.height = bodyH+"px";
+  body.style.bottom = (Math.random()*30)+"px";
+
+  candle.appendChild(wick);
+  candle.appendChild(body);
+  chart.appendChild(candle);
+
+  if(chart.children.length > 20){
+    chart.removeChild(chart.children[0]);
+  }
+
+  signalEl.innerText = color === "green" ? "UP" : "DOWN";
+}
+
+setInterval(addCandle, 1000);
+
+// TIMER
+let t = seconds;
+setInterval(()=>{
+  t--;
+  if(t<=0) t = seconds;
+  timerEl.innerText = "00:" + String(t).padStart(2,"0");
+},1000);
+</script>
+
+</body>
+  </html>
