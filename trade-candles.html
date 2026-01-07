@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live OTC Candles Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* =========================
+   BASIC RESET
+========================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* =========================
+   BODY
+========================= */
+body{
+  background:#0f2027;
+  color:#fff;
+  padding-bottom:80px;
+}
+
+/* =========================
+   HEADER
+========================= */
+header{
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  background:#0b1a20;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+.controls{
+  padding:15px;
+}
+
+select{
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:none;
+  font-size:16px;
+}
+
+/* =========================
+   CHART AREA
+========================= */
+.chart-box{
+  margin:15px;
+  background:#0b1a20;
+  border-radius:12px;
+  padding:15px;
+}
+
+canvas{
+  width:100%;
+  height:260px;
+}
+
+/* =========================
+   INFO
+========================= */
+.info{
+  text-align:center;
+  margin-top:10px;
+  font-size:18px;
+}
+
+.signal{
+  font-weight:bold;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.buttons{
+  display:flex;
+  gap:15px;
+  padding:15px;
+}
+
+.btn{
+  flex:1;
+  padding:15px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+  color:#fff;
+}
+
+.btn-down{ background:#e74c3c; }
+.btn-up{ background:#2ecc71; }
+</style>
+</head>
+
+<body>
+
+<header>
+  OTC Live Candle Demo
+</header>
+
+<div class="controls">
+  <select id="pair">
+    <option>USD/PKR (OTC)</option>
+    <option>EUR/USD (OTC)</option>
+    <option>GBP/USD (OTC)</option>
+  </select>
+
+  <select id="timeframe">
+    <option value="5">5 Seconds</option>
+    <option value="10">10 Seconds</option>
+    <option value="60">1 Minute</option>
+  </select>
+</div>
+
+<div class="chart-box">
+  <canvas id="chart" width="320" height="260"></canvas>
+
+  <div class="info">
+    ⏱ Timer: <span id="timer">0</span>s<br>
+    📊 Signal: <span id="signal" class="signal">WAIT</span>
+  </div>
+</div>
+
+<div class="buttons">
+  <button class="btn btn-down">Down ↓</button>
+  <button class="btn btn-up">Up ↑</button>
+</div>
+
+<script>
+/* =========================
+   CANVAS SETUP
+========================= */
+const canvas = document.getElementById("chart");
+const ctx = canvas.getContext("2d");
+
+let candles = [];
+let maxCandles = 20;
+
+/* =========================
+   TIMER
+========================= */
+let timeLeft = 5;
+let timeframe = 5;
+
+document.getElementById("timeframe").addEventListener("change", e=>{
+  timeframe = parseInt(e.target.value);
+  timeLeft = timeframe;
+});
+
+/* =========================
+   PRICE SIMULATION
+========================= */
+let price = 100;
+
+function newCandle(){
+  let open = price;
+  let close = open + (Math.random() - 0.5) * 4;
+  let high = Math.max(open, close) + Math.random() * 2;
+  let low  = Math.min(open, close) - Math.random() * 2;
+
+  price = close;
+
+  candles.push({open, close, high, low});
+  if(candles.length > maxCandles){
+    candles.shift();
+  }
+
+  generateSignal(open, close);
+}
+
+/* =========================
+   SIGNAL AFTER CANDLE CLOSE
+========================= */
+function generateSignal(open, close){
+  const signalEl = document.getElementById("signal");
+  if(close > open){
+    signalEl.textContent = "UP";
+    signalEl.style.color = "#2ecc71";
+  }else{
+    signalEl.textContent = "DOWN";
+    signalEl.style.color = "#e74c3c";
+  }
+}
+
+/* =========================
+   DRAW CANDLES (REAL BODY)
+========================= */
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  let cw = canvas.width / maxCandles;
+
+  candles.forEach((c,i)=>{
+    let x = i * cw + cw/4;
+    let center = canvas.height / 2;
+
+    let scale = 5;
+
+    let openY  = center - c.open * scale * 0.05;
+    let closeY = center - c.close * scale * 0.05;
+    let highY  = center - c.high * scale * 0.05;
+    let lowY   = center - c.low  * scale * 0.05;
+
+    // wick
+    ctx.strokeStyle = "#ccc";
+    ctx.beginPath();
+    ctx.moveTo(x+5, highY);
+    ctx.lineTo(x+5, lowY);
+    ctx.stroke();
+
+    // body
+    ctx.fillStyle = c.close >= c.open ? "#2ecc71" : "#e74c3c";
+    ctx.fillRect(x, Math.min(openY,closeY), 10, Math.abs(openY-closeY));
+  });
+}
+
+/* =========================
+   MAIN LOOP
+========================= */
+setInterval(()=>{
+  timeLeft--;
+  document.getElementById("timer").textContent = timeLeft;
+
+  if(timeLeft <= 0){
+    newCandle();
+    timeLeft = timeframe;
+  }
+
+  draw();
+},1000);
+
+/* =========================
+   INIT
+========================= */
+timeLeft = timeframe;
+</script>
+
+</body>
+  </html>
