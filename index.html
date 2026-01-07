@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Demo Earning App v4</title>
+<title>Demo Earning App v5</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -25,7 +25,7 @@ body{
   padding:15px;
   border-radius:12px;
 }
-input,button{
+input,button,select{
   width:100%;
   padding:12px;
   margin:8px 0;
@@ -33,7 +33,7 @@ input,button{
   border-radius:8px;
   font-size:15px;
 }
-input{background:#fff;color:#000}
+input,select{background:#fff;color:#000}
 button{
   background:#2ecc71;
   color:#fff;
@@ -99,9 +99,8 @@ button{
     <h3>Referral Program</h3>
     <p>Share Bonus: ₹10</p>
     <p>
-      Agar koi user aapke link se register
-      karke plan buy kare to aapko
-      <b>₹50 bonus</b> milega (Demo).
+      Aapke link se koi user register karke plan buy kare
+      to aapko <b>₹50 bonus</b> milega (Demo).
     </p>
     <input id="refLink" value="https://demo-app.io/ref=USER123" readonly>
     <button onclick="copyRef()">Copy Referral Link</button>
@@ -111,13 +110,29 @@ button{
 <!-- PLANS -->
 <div id="plans" class="hidden">
   <div class="top">💼 Plans</div>
-
   <div id="planList"></div>
 </div>
 
-<!-- PAYMENT -->
+<!-- WITHDRAW -->
+<div id="withdraw" class="hidden">
+  <div class="top">💸 Withdrawal</div>
+  <div class="card">
+    <p><b>Minimum Withdrawal: ₹150</b></p>
+    <select id="method">
+      <option value="">Select Method</option>
+      <option>JazzCash</option>
+      <option>Easypaisa</option>
+    </select>
+    <input id="acc" placeholder="Account Number">
+    <input id="amount" placeholder="Amount">
+    <button onclick="submitWithdraw()">Submit Withdrawal</button>
+    <p class="small">Processing Time: 2–10 hours (Demo)</p>
+  </div>
+</div>
+
+<!-- PAYMENT (PLAN BUY) -->
 <div id="payment" class="hidden">
-  <div class="top">💳 Payment Details</div>
+  <div class="top">💳 Plan Payment</div>
   <div class="card">
     <p><b>JazzCash Number:</b></p>
     <p>📱 03245549182</p>
@@ -144,12 +159,12 @@ button{
 <div id="nav" class="nav hidden">
   <button class="active" onclick="showPage('home')">Home</button>
   <button onclick="showPage('plans')">Plans</button>
+  <button onclick="showPage('withdraw')">Withdraw</button>
   <button onclick="showPage('support')">Support</button>
 </div>
 
 <script>
 const OTP="786900";
-
 const plans=[
  {price:100, reward:50},
  {price:300, reward:70},
@@ -166,52 +181,46 @@ const plans=[
 function sound(){document.getElementById("clickSound").play();}
 
 function toOTP(){
-  sound();
-  login.classList.add("hidden");
-  otp.classList.remove("hidden");
+  sound(); login.classList.add("hidden"); otp.classList.remove("hidden");
 }
-
 function verifyOTP(){
   sound();
   if(otpInput.value===OTP){
     otp.classList.add("hidden");
     home.classList.remove("hidden");
     nav.classList.remove("hidden");
-  }else{
-    alert("Wrong OTP (Demo)");
-  }
+  }else alert("Wrong OTP (Demo)");
 }
 
 function showPage(id){
   sound();
-  ["home","plans","support","payment"].forEach(x=>{
+  ["home","plans","withdraw","support","payment"].forEach(x=>{
     document.getElementById(x).classList.add("hidden");
   });
   document.getElementById(id).classList.remove("hidden");
 }
 
-function buyPlan(){
-  sound();
-  plansDiv.classList.add("hidden");
-  payment.classList.remove("hidden");
-}
-
-function backPlans(){
-  sound();
-  payment.classList.add("hidden");
-  plansDiv.classList.remove("hidden");
-}
-
 function copyRef(){
-  sound();
-  refLink.select();
-  document.execCommand("copy");
+  sound(); refLink.select(); document.execCommand("copy");
   alert("Referral link copied!");
 }
 
-const plansDiv=document.getElementById("plans");
-const list=document.getElementById("planList");
+function submitWithdraw(){
+  sound();
+  const amt = parseInt(amount.value||0,10);
+  if(amt < 150){
+    alert("Minimum withdrawal ₹150 (Demo)");
+    return;
+  }
+  alert("Withdrawal request submitted (Demo)");
+}
 
+function backPlans(){
+  sound(); payment.classList.add("hidden"); plans.classList.remove("hidden");
+}
+
+// render plans
+const list=document.getElementById("planList");
 plans.forEach((p,i)=>{
   const d=document.createElement("div");
   d.className="card";
@@ -226,4 +235,4 @@ plans.forEach((p,i)=>{
 </script>
 
 </body>
-                         </html>
+      </html>
