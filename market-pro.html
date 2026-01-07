@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Market Pro Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    /* =======================
+       BASIC RESET
+    ======================= */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0f2027;
+      color: #ffffff;
+      padding: 16px;
+    }
+
+    /* =======================
+       HEADER
+    ======================= */
+    .header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
+
+    /* =======================
+       CONTROLS
+    ======================= */
+    .controls {
+      margin-bottom: 16px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    /* =======================
+       CHART AREA
+    ======================= */
+    .chart-box {
+      background: #08161d;
+      border-radius: 12px;
+      padding: 16px;
+      height: 260px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .candle {
+      width: 14px;
+      border-radius: 4px;
+      transition: height 0.6s ease;
+    }
+
+    .green {
+      background: #2ecc71;
+    }
+
+    .red {
+      background: #e74c3c;
+    }
+
+    /* =======================
+       INFO
+    ======================= */
+    .info {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 18px;
+    }
+
+    .signal {
+      font-weight: bold;
+    }
+
+    /* =======================
+       BUTTONS
+    ======================= */
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .btn-down {
+      background: #e74c3c;
+    }
+
+    .btn-up {
+      background: #2ecc71;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =======================
+       HEADER
+  ======================= -->
+  <div class="header">
+    <h1>MARKET PRO (OTC)</h1>
+  </div>
+
+  <!-- =======================
+       CONTROLS
+  ======================= -->
+  <div class="controls">
+    <select id="pair">
+      <option>USD/PKR (OTC)</option>
+      <option>EUR/USD (OTC)</option>
+      <option>GBP/USD (OTC)</option>
+    </select>
+
+    <select id="timeframe">
+      <option value="5">5 Seconds</option>
+      <option value="10">10 Seconds</option>
+      <option value="60" selected>1 Minute</option>
+    </select>
+  </div>
+
+  <!-- =======================
+       CHART
+  ======================= -->
+  <div class="chart-box" id="chart">
+    <!-- candles injected by JS -->
+  </div>
+
+  <!-- =======================
+       INFO
+  ======================= -->
+  <div class="info">
+    <div>Timer: <span id="timer">60</span>s</div>
+    <div>Signal: <span id="signal" class="signal">WAIT</span></div>
+  </div>
+
+  <!-- =======================
+       BUTTONS
+  ======================= -->
+  <div class="buttons">
+    <button class="btn btn-down">Down ↓</button>
+    <button class="btn btn-up">Up ↑</button>
+  </div>
+
+  <!-- =======================
+       SCRIPT
+  ======================= -->
+  <script>
+    /* =======================
+       STATE VARIABLES
+    ======================= */
+    let selectedTime = 60;
+    let timer = selectedTime;
+    let currentSignal = "WAIT";
+    let candleCount = 10;
+
+    const chart = document.getElementById("chart");
+    const timerEl = document.getElementById("timer");
+    const signalEl = document.getElementById("signal");
+    const timeframeSelect = document.getElementById("timeframe");
+
+    /* =======================
+       INITIAL SETUP
+    ======================= */
+    createInitialCandles();
+    generateNewSignal();
+
+    /* =======================
+       TIMEFRAME CHANGE
+    ======================= */
+    timeframeSelect.addEventListener("change", () => {
+      selectedTime = parseInt(timeframeSelect.value);
+      timer = selectedTime;
+      timerEl.innerText = timer;
+    });
+
+    /* =======================
+       MAIN TIMER (1s)
+    ======================= */
+    setInterval(() => {
+      timer--;
+      timerEl.innerText = timer;
+
+      if (timer <= 0) {
+        updateCandles();
+        generateNewSignal();
+        timer = selectedTime;
+      }
+    }, 1000);
+
+    /* =======================
+       FUNCTIONS
+    ======================= */
+
+    function createInitialCandles() {
+      chart.innerHTML = "";
+      for (let i = 0; i < candleCount; i++) {
+        chart.appendChild(createCandle());
+      }
+    }
+
+    function createCandle() {
+      const div = document.createElement("div");
+      const height = randomHeight();
+      const isGreen = Math.random() > 0.5;
+
+      div.className = "candle " + (isGreen ? "green" : "red");
+      div.style.height = height + "px";
+
+      return div;
+    }
+
+    function updateCandles() {
+      chart.removeChild(chart.firstChild);
+      chart.appendChild(createCandle());
+    }
+
+    function generateNewSignal() {
+      currentSignal = Math.random() > 0.5 ? "UP" : "DOWN";
+      signalEl.innerText = currentSignal;
+    }
+
+    function randomHeight() {
+      return Math.floor(Math.random() * 160) + 40;
+    }
+  </script>
+
+</body>
+  </html>
