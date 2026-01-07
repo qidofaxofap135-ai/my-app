@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Earnify — Real Tasks, Real Rewards</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Earn by completing simple tasks. Transparent rules, manual withdrawals, and real support.">
+<style>
+:root{
+  --bg:#0f172a; --card:#111827; --muted:#9ca3af;
+  --primary:#16a34a; --accent:#22c55e; --danger:#ef4444; --text:#e5e7eb;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;background:linear-gradient(120deg,#020617,#020617 60%,#020617);color:var(--text)}
+header{position:sticky;top:0;background:#020617cc;backdrop-filter:blur(8px);border-bottom:1px solid #0b1220;z-index:9}
+nav{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px}
+.brand{font-weight:800;letter-spacing:.3px}
+.brand span{color:var(--accent)}
+.nav a{color:#c7d2fe;text-decoration:none;padding:8px 10px;border-radius:8px}
+.nav a:hover{background:#0b1220}
+main{padding:18px}
+.grid{display:grid;gap:16px}
+@media(min-width:900px){.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+.card{background:linear-gradient(180deg,#0b1220,#020617);border:1px solid #0b1220;border-radius:16px;padding:16px}
+h1,h2,h3{margin:.2em 0}
+p{color:#cbd5f5}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#052e1b;color:#86efac;font-weight:600}
+.btn{display:inline-block;border:none;border-radius:10px;padding:10px 14px;background:var(--primary);color:#052e1b;font-weight:800;cursor:pointer}
+.btn.alt{background:#0b1220;color:#e5e7eb;border:1px solid #1f2937}
+.btn.warn{background:var(--danger);color:#fff}
+.list{padding-left:18px}
+footer{border-top:1px solid #0b1220;padding:18px;color:#94a3b8}
+input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #1f2937;background:#020617;color:#e5e7eb}
+label{font-size:.9rem;color:#cbd5f5}
+hr{border:0;border-top:1px solid #0b1220;margin:16px 0}
+small{color:var(--muted)}
+.hidden{display:none}
+.notice{background:#052e1b;border:1px solid #14532d;color:#86efac;border-radius:12px;padding:12px}
+.warnbox{background:#3f1d0b;border:1px solid #7c2d12;color:#fdba74;border-radius:12px;padding:12px}
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="brand">Earn<span>ify</span></div>
+    <div class="nav">
+      <a href="#home">Home</a>
+      <a href="#tasks">Tasks</a>
+      <a href="#wallet">Wallet</a>
+      <a href="#referral">Referral</a>
+      <a href="#contact">Support</a>
+    </div>
+  </nav>
+</header>
+
+<main id="home" class="grid">
+  <section class="card">
+    <span class="badge">Transparent • Real • Manual Withdrawals</span>
+    <h1>Earn by Completing Simple Tasks</h1>
+    <p>No guaranteed income. Earnings depend on activity and availability of tasks.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="#tasks">Start Tasks</a>
+      <a class="btn alt" href="#wallet">Wallet & Withdrawal</a>
