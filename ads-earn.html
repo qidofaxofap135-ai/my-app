@@ -2,75 +2,67 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Ai Vibes Studio | Informational Website</title>
+<title>GIS | Knowledge & Information</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- SEO BASIC -->
-<meta name="description" content="Ai Vibes Studio provides informational content, guides, and resources. This website is designed to be Google AdSense friendly.">
-<meta name="keywords" content="information, guides, tech tips, earning knowledge, Pakistan">
-<meta name="author" content="Ai Vibes Studio">
+<meta name="description" content="GIS is an informational website sharing knowledge, guides, and educational content. Fully AdSense policy compliant.">
+<meta name="author" content="GIS">
 
 <style>
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family: Arial, sans-serif;
-  background:#0e0e0e;
-  color:#ffffff;
+  font-family:Segoe UI, Arial, sans-serif;
+  background:#0f0f0f;
+  color:#fff;
 }
 header{
-  background:#b00020;
-  padding:18px;
+  background:linear-gradient(135deg,#b30000,#ff3333);
+  padding:28px 15px;
   text-align:center;
+}
+header h1{margin:0;font-size:34px}
+header p{opacity:.9}
+header button{
+  margin-top:15px;
+  padding:13px 28px;
+  background:#0aa84f;
+  border:none;
+  color:#fff;
+  border-radius:30px;
+  cursor:pointer;
 }
 nav{
   display:flex;
   justify-content:space-around;
-  background:#1b1b1b;
-  padding:10px 0;
   flex-wrap:wrap;
+  background:#161616;
+  padding:10px;
 }
 nav button{
-  background:#0a7a0a;
+  background:#222;
   border:none;
   color:#fff;
-  padding:8px 14px;
+  padding:8px 16px;
   margin:4px;
-  border-radius:6px;
+  border-radius:20px;
   cursor:pointer;
 }
-section{
-  display:none;
-  padding:18px;
-}
-section.active{
-  display:block;
-}
+nav button:hover{background:#0aa84f}
+section{display:none;padding:20px}
+section.active{display:block}
 .card{
-  background:#1f1f1f;
-  padding:16px;
-  margin-bottom:14px;
-  border-radius:10px;
+  background:#1e1e1e;
+  padding:18px;
+  margin-bottom:15px;
+  border-radius:14px;
 }
-input{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:6px;
-  border:none;
-}
-button.action{
-  width:100%;
-  background:#008000;
-  color:#fff;
-  padding:10px;
-  border:none;
-  border-radius:6px;
-}
+.card h3{color:#0ecf63;margin-top:0}
 footer{
   text-align:center;
   font-size:13px;
-  opacity:0.7;
-  padding:16px;
+  opacity:.7;
+  padding:18px;
 }
 </style>
 
@@ -78,6 +70,7 @@ footer{
 function show(id){
   document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
 }
 </script>
 </head>
@@ -85,52 +78,41 @@ function show(id){
 <body>
 
 <header>
-  <h2>Ai Vibes Studio</h2>
-  <p>Informational & Content Platform</p>
+  <h1>GIS</h1>
+  <p>Knowledge • Guides • Information</p>
+  <button onclick="show('home')">Start Earning</button>
 </header>
 
 <nav>
   <button onclick="show('home')">Home</button>
-  <button onclick="show('about')">About</button>
+  <button onclick="show('about')">About Us</button>
   <button onclick="show('contact')">Contact</button>
-  <button onclick="show('withdrawal')">Withdrawal Info</button>
-  <button onclick="show('login')">Login</button>
+  <button onclick="show('privacy')">Privacy Policy</button>
+  <button onclick="show('terms')">Terms</button>
 </nav>
 
 <!-- HOME -->
 <section id="home" class="active">
   <div class="card">
-    <h3>Welcome</h3>
+    <h3>Welcome to GIS</h3>
     <p>
-      Welcome to Ai Vibes Studio. This website provides informational content,
-      guides, and knowledge-based articles for users.
-      The platform is designed to follow Google AdSense policies.
+      GIS is an informational platform created to share helpful guides,
+      educational content, and general knowledge for users.
     </p>
-  </div>
-
-  <div class="card">
-    <h3>What We Offer</h3>
-    <ul>
-      <li>Educational articles</li>
-      <li>Technology guides</li>
-      <li>General online knowledge</li>
-      <li>Safe & policy-compliant content</li>
-    </ul>
   </div>
 </section>
 
-<!-- ABOUT -->
+<!-- ABOUT US -->
 <section id="about">
   <div class="card">
     <h3>About Us</h3>
     <p>
-      Ai Vibes Studio is an independent informational platform.
-      Our goal is to share useful and easy-to-understand content
-      for users in Pakistan and worldwide.
+      GIS is a content-based informational website. Our goal is to provide
+      clear, simple, and useful information for educational purposes only.
     </p>
     <p>
-      This website does not sell plans, does not offer investments,
-      and does not promise user earnings.
+      We do not offer investment schemes, guaranteed income, or financial promises.
+      All content is published in compliance with Google AdSense policies.
     </p>
   </div>
 </section>
@@ -139,59 +121,53 @@ function show(id){
 <section id="contact">
   <div class="card">
     <h3>Contact Us</h3>
-    <p>Email: <strong>aivibesstudio009@gmail.com</strong></p>
-    <p>Phone / WhatsApp: <strong>03077857478</strong></p>
+    <p><strong>Email:</strong> aivibesstudio009@gmail.com</p>
+    <p><strong>Phone / WhatsApp:</strong> 03077857478</p>
     <p>
-      For general questions, content inquiries, or support,
-      please contact us during working hours.
+      You may contact us for general inquiries or website-related support.
     </p>
   </div>
 </section>
 
-<!-- WITHDRAWAL INFO -->
-<section id="withdrawal">
+<!-- PRIVACY POLICY -->
+<section id="privacy">
   <div class="card">
-    <h3>Payment & Withdrawal Information</h3>
+    <h3>Privacy Policy</h3>
     <p>
-      This website earns revenue through advertising platforms
-      such as Google AdSense.
+      At GIS, we respect your privacy. We do not collect personal information
+      unless voluntarily provided by users.
     </p>
     <p>
-      Advertisement earnings are received by the website owner
-      through supported payment methods.
+      Third-party services such as Google AdSense may use cookies to display
+      relevant advertisements based on user interests.
     </p>
-    <ul>
-      <li>JazzCash (Owner Account)</li>
-      <li>EasyPaisa (Owner Account)</li>
-    </ul>
     <p>
-      Note: Users do not make withdrawals from this website.
-      Payments mentioned are for business and operational purposes only.
+      By using this website, you agree to the use of cookies as per Google policies.
     </p>
   </div>
 </section>
 
-<!-- LOGIN -->
-<section id="login">
+<!-- TERMS -->
+<section id="terms">
   <div class="card">
-    <h3>Login</h3>
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Password">
-    <button class="action" onclick="alert('Login system is UI only')">Login</button>
-  </div>
-
-  <div class="card">
-    <h3>Sign Up</h3>
-    <input type="text" placeholder="Full Name">
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Password">
-    <button class="action" onclick="alert('Signup system is UI only')">Create Account</button>
+    <h3>Terms & Conditions</h3>
+    <p>
+      By accessing GIS, you agree to use the website for lawful purposes only.
+    </p>
+    <p>
+      All content is provided for informational purposes and may be updated
+      or changed without notice.
+    </p>
+    <p>
+      GIS is not responsible for any loss or damage resulting from the use
+      of information published on this website.
+    </p>
   </div>
 </section>
 
 <footer>
-  © 2026 Ai Vibes Studio | All Rights Reserved
+  © 2026 GIS | All Rights Reserved
 </footer>
 
 </body>
-      </html>
+  </html> 
