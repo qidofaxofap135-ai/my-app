@@ -2,32 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Demo Earning App v3</title>
+<title>Demo Earning App v4</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-:root{
-  --bg:#0f2027;
-  --card:#111c22;
-  --text:#fff;
-  --green:#2ecc71;
-  --red:#e74c3c;
-}
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:var(--bg);
-  color:var(--text);
+  background:#0f2027;
+  color:#fff;
 }
 .hidden{display:none}
 .top{
-  padding:15px;
   text-align:center;
+  padding:15px;
   font-size:20px;
   font-weight:bold;
 }
 .card{
-  background:var(--card);
+  background:#111c22;
   margin:12px;
   padding:15px;
   border-radius:12px;
@@ -42,12 +35,12 @@ input,button{
 }
 input{background:#fff;color:#000}
 button{
-  background:var(--green);
+  background:#2ecc71;
   color:#fff;
   font-weight:bold;
 }
-.btn-red{background:var(--red)}
-.small{font-size:12px;opacity:0.85}
+.btn-red{background:#e74c3c}
+.small{font-size:12px;opacity:.85}
 
 .nav{
   position:fixed;
@@ -60,13 +53,13 @@ button{
   border-radius:0;
   background:#000;
 }
-.nav button.active{background:var(--green)}
+.nav button.active{background:#2ecc71}
 </style>
 </head>
 
 <body>
 
-<audio id="beep">
+<audio id="clickSound">
   <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
 </audio>
 
@@ -76,7 +69,7 @@ button{
   <div class="card">
     <input placeholder="Gmail or Phone">
     <input type="password" placeholder="Password">
-    <button onclick="goOTP()">Continue</button>
+    <button onclick="toOTP()">Continue</button>
     <p class="small">
       OTP ke liye message karein:<br>
       <b>03077857478</b>
@@ -96,9 +89,22 @@ button{
 <!-- HOME -->
 <div id="home" class="hidden">
   <div class="top">🏠 Home</div>
+
   <div class="card">
-    <h3>Wallet: ₹50</h3>
-    <p class="small">Demo balance</p>
+    <h3>Wallet Balance: ₹50</h3>
+    <p class="small">Demo balance only</p>
+  </div>
+
+  <div class="card">
+    <h3>Referral Program</h3>
+    <p>Share Bonus: ₹10</p>
+    <p>
+      Agar koi user aapke link se register
+      karke plan buy kare to aapko
+      <b>₹50 bonus</b> milega (Demo).
+    </p>
+    <input id="refLink" value="https://demo-app.io/ref=USER123" readonly>
+    <button onclick="copyRef()">Copy Referral Link</button>
   </div>
 </div>
 
@@ -106,29 +112,14 @@ button{
 <div id="plans" class="hidden">
   <div class="top">💼 Plans</div>
 
-  <script>
-    const planData = [
-      {p:100,b:50,d:"3 Weeks"},
-      {p:300,b:70,d:"1 Month"},
-      {p:500,b:120,d:"1 Month"},
-      {p:800,b:200,d:"2 Months"},
-      {p:1000,b:280,d:"2 Months"},
-      {p:1500,b:450,d:"3 Months"},
-      {p:2000,b:650,d:"3 Months"},
-      {p:3000,b:1000,d:"4 Months"},
-      {p:5000,b:1800,d:"6 Months"},
-      {p:8000,b:3000,d:"1 Year"}
-    ];
-  </script>
-
   <div id="planList"></div>
 </div>
 
 <!-- PAYMENT -->
 <div id="payment" class="hidden">
-  <div class="top">💳 Plan Payment</div>
+  <div class="top">💳 Payment Details</div>
   <div class="card">
-    <p><b>JazzCash Account:</b></p>
+    <p><b>JazzCash Number:</b></p>
     <p>📱 03245549182</p>
     <p>👤 Name: Jhandir Ahmed</p>
     <hr>
@@ -136,7 +127,7 @@ button{
       Payment ke baad screenshot is number par bhejen:
       <br><b>03077857478</b>
     </p>
-    <button class="btn-red" onclick="backToPlans()">Back</button>
+    <button class="btn-red" onclick="backPlans()">Back to Plans</button>
   </div>
 </div>
 
@@ -159,9 +150,22 @@ button{
 <script>
 const OTP="786900";
 
-function sound(){document.getElementById("beep").play();}
+const plans=[
+ {price:100, reward:50},
+ {price:300, reward:70},
+ {price:500, reward:120},
+ {price:800, reward:200},
+ {price:1000, reward:280},
+ {price:1500, reward:450},
+ {price:2000, reward:650},
+ {price:3000, reward:1000},
+ {price:5000, reward:1800},
+ {price:8000, reward:3000}
+];
 
-function goOTP(){
+function sound(){document.getElementById("clickSound").play();}
+
+function toOTP(){
   sound();
   login.classList.add("hidden");
   otp.classList.remove("hidden");
@@ -188,30 +192,38 @@ function showPage(id){
 
 function buyPlan(){
   sound();
-  plans.classList.add("hidden");
+  plansDiv.classList.add("hidden");
   payment.classList.remove("hidden");
 }
 
-function backToPlans(){
+function backPlans(){
   sound();
   payment.classList.add("hidden");
-  plans.classList.remove("hidden");
+  plansDiv.classList.remove("hidden");
 }
 
+function copyRef(){
+  sound();
+  refLink.select();
+  document.execCommand("copy");
+  alert("Referral link copied!");
+}
+
+const plansDiv=document.getElementById("plans");
 const list=document.getElementById("planList");
-planData.forEach((x,i)=>{
+
+plans.forEach((p,i)=>{
   const d=document.createElement("div");
   d.className="card";
   d.innerHTML=`
     <h3>Plan ${i+1}</h3>
-    <p>Price: ₹${x.p}</p>
-    <p>Bonus: ₹${x.b}</p>
-    <p>Duration: ${x.d}</p>
-    <button onclick="buyPlan()">Buy Plan</button>
+    <p>Price: ₹${p.price}</p>
+    <p>Daily Reward: ₹${p.reward}</p>
+    <button onclick="showPage('payment')">Buy Plan</button>
   `;
   list.appendChild(d);
 });
 </script>
 
 </body>
-                            </html>  
+                         </html>
