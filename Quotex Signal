@@ -4,40 +4,119 @@
 <meta charset="UTF-8">
 <title>Demo Trading App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-body{margin:0;font-family:Arial;background:#0e1f26;color:#fff}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#0e1f26;
+  color:#fff;
+}
+
+/* COMMON */
 .hidden{display:none}
-.header{padding:12px;background:#102a33;display:flex;gap:10px}
-select,input,button{padding:10px;border-radius:6px;border:none}
-button{cursor:pointer;font-weight:bold}
+input,select,button{
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  font-size:14px;
+}
+button{
+  cursor:pointer;
+  font-weight:bold;
+}
 .green{background:#20c997}
 .red{background:#e74c3c}
-#chart{height:280px;background:#08161c;display:flex;align-items:flex-end;padding:10px;gap:6px}
-.candle{width:14px;position:relative;border-radius:2px}
-.candle.green{background:#20c997}
-.candle.red{background:#e74c3c}
-.bottom{padding:12px;background:#102a33}
-.signal{margin:8px 0;font-weight:bold}
-.timer{font-size:18px;margin-bottom:6px}
+
+/* LOGIN */
+#login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.login-box{
+  width:90%;
+  max-width:360px;
+  background:#102a33;
+  padding:20px;
+  border-radius:10px;
+}
+.login-box h2{
+  text-align:center;
+  margin-bottom:15px;
+}
+.login-box div{
+  display:grid;
+  gap:10px;
+}
+
+/* APP */
+#app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+.header{
+  padding:10px;
+  background:#102a33;
+  display:flex;
+  gap:10px;
+}
+#chart{
+  flex:1;
+  background:#08161c;
+  display:flex;
+  align-items:flex-end;
+  padding:10px;
+  gap:6px;
+}
+.candle{
+  width:14px;
+  border-radius:2px;
+}
+.bottom{
+  padding:10px;
+  background:#102a33;
+}
+.signal{
+  margin-bottom:6px;
+  font-weight:bold;
+}
+.timer{
+  margin-bottom:6px;
+}
+.buttons{
+  display:flex;
+  gap:10px;
+}
+.buttons button{
+  flex:1;
+  padding:14px;
+  font-size:16px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<!-- ========== LOGIN / SIGNUP SCREEN ========== -->
 <div id="login">
-  <h2 style="padding:12px">Secure Access</h2>
-  <div style="padding:12px;display:grid;gap:10px">
-    <input placeholder="Gmail">
-    <input placeholder="Phone Number">
-    <input type="password" placeholder="Password">
-    <input id="otp" type="password" placeholder="Enter Access Code">
-    <button onclick="checkOTP()">Unlock App</button>
-    <small>Enter access code to continue</small>
+  <div class="login-box">
+    <h2>Sign Up / Login</h2>
+    <div>
+      <input placeholder="Gmail">
+      <input placeholder="Phone Number">
+      <input type="password" placeholder="Password">
+      <!-- OTP FIELD (VISIBLE BUT HIDDEN INPUT) -->
+      <input id="otp" type="password" placeholder="Enter OTP">
+      <button onclick="verifyOTP()">Continue</button>
+      <small>Enter correct OTP to open app</small>
+    </div>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ========== APP SCREEN ========== -->
 <div id="app" class="hidden">
 
   <div class="header">
@@ -47,7 +126,7 @@ button{cursor:pointer;font-weight:bold}
       <option>GBP/USD (OTC)</option>
     </select>
 
-    <select id="tf" onchange="resetTimer()">
+    <select id="timeframe" onchange="resetTimer()">
       <option value="60">1 Minute</option>
       <option value="10">10 Seconds</option>
       <option value="5">5 Seconds</option>
@@ -57,52 +136,61 @@ button{cursor:pointer;font-weight:bold}
   <div id="chart"></div>
 
   <div class="bottom">
-    <div class="timer">Timer: <span id="timer">--</span></div>
-    <div class="signal" id="signal">Signal: -- (Demo)</div>
-    <button class="red">Down ↓</button>
-    <button class="green">Up ↑</button>
+    <div class="timer">
+      Timer: <span id="timer">--</span>
+    </div>
+    <div class="signal" id="signal">
+      Signal: -- (Demo)
+    </div>
+    <div class="buttons">
+      <button class="red">Down ↓</button>
+      <button class="green">Up ↑</button>
+    </div>
   </div>
 
 </div>
 
 <script>
-const SECRET_OTP = "786900";
+/* ================= OTP LOGIC ================= */
+const CORRECT_OTP = "786900";
+
+function verifyOTP(){
+  const val = document.getElementById("otp").value;
+  if(val === CORRECT_OTP){
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    startMarket();
+  }else{
+    alert("Wrong OTP");
+  }
+}
+
+/* ================= MARKET LOGIC ================= */
 let price = 100;
 let chart = document.getElementById("chart");
 let timerSpan = document.getElementById("timer");
 let signalSpan = document.getElementById("signal");
-let timerValue = 60;
-let interval;
-
-function checkOTP(){
-  if(document.getElementById("otp").value === SECRET_OTP){
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-    resetTimer();
-  } else {
-    alert("Access denied");
-  }
-}
+let seconds = 60;
+let loop;
 
 function resetTimer(){
-  clearInterval(interval);
-  timerValue = parseInt(document.getElementById("tf").value);
-  timerSpan.textContent = timerValue;
-  interval = setInterval(runTimer,1000);
+  clearInterval(loop);
+  seconds = parseInt(document.getElementById("timeframe").value);
+  timerSpan.textContent = seconds;
+  loop = setInterval(tick,1000);
 }
 
-function runTimer(){
-  timerValue--;
-  timerSpan.textContent = timerValue;
-
-  if(timerValue <= 0){
+function tick(){
+  seconds--;
+  timerSpan.textContent = seconds;
+  if(seconds <= 0){
     createCandle();
     resetTimer();
   }
 }
 
 function createCandle(){
-  if(chart.children.length > 18){
+  if(chart.children.length > 20){
     chart.removeChild(chart.firstChild);
   }
 
@@ -115,8 +203,12 @@ function createCandle(){
   candle.style.height = Math.abs(close-open)*6 + 20 + "px";
   chart.appendChild(candle);
 
-  let next = Math.random() > 0.5 ? "GREEN 🟢" : "RED 🔴";
-  signalSpan.textContent = "Next Candle: " + next + " (live)";
+  let next = Math.random() > 0.5 ? "GREEN 🟢":"RED 🔴";
+  signalSpan.textContent = "Next Candle: " + next + " (Demo)";
+}
+
+function startMarket(){
+  resetTimer();
 }
 </script>
 
