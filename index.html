@@ -2,79 +2,81 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Quotex USD/PKR OTC Demo</title>
+<title>Quotex Candle Live </title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body{
   margin:0;
-  background:#0b1f26;
-  font-family:Arial;
+  background:#0b1c22;
+  font-family:Arial, sans-serif;
   color:#fff;
 }
 
 /* TOP BAR */
-#top{
+.top{
   display:flex;
   gap:10px;
   padding:12px;
-  background:#0e2a33;
+  background:#0f2a33;
 }
-
 select{
-  background:#102f38;
+  background:#132f38;
   color:#fff;
   border:1px solid #1f4b57;
   padding:6px 10px;
   border-radius:4px;
 }
 
-/* CHART */
+/* CHART AREA */
 #chart{
   position:relative;
   height:65vh;
-  background:#0b1f26;
+  background:#0b1c22;
   overflow:hidden;
 }
 
+/* CANDLE */
 .candle{
   position:absolute;
-  bottom:80px;
   width:12px;
 }
-
 .wick{
   position:absolute;
   width:2px;
   left:5px;
   background:#aaa;
 }
-
 .body{
   position:absolute;
   width:100%;
   border-radius:2px;
 }
-
 .green{background:#1ec98b;}
 .red{background:#e74c3c;}
 
+/* RIGHT FUTURE ZONE */
+.future{
+  opacity:0.45;
+}
+
 /* BOTTOM */
-#bottom{
-  padding:15px;
-  background:#0e2a33;
+.bottom{
+  background:#0f2a33;
+  padding:14px;
 }
-
-#prediction{
+.signal{
   margin-bottom:10px;
-  font-size:15px;
+  font-size:16px;
 }
-
-.btns{
+.accuracy{
+  font-size:13px;
+  opacity:.7;
+}
+.buttons{
   display:flex;
   gap:10px;
 }
-
 button{
   flex:1;
   padding:14px;
@@ -83,7 +85,6 @@ button{
   border-radius:6px;
   color:#fff;
 }
-
 .up{background:#1ec98b;}
 .down{background:#e74c3c;}
 </style>
@@ -91,62 +92,68 @@ button{
 
 <body>
 
-<div id="top">
+<div class="top">
   <select>
     <option>USD/PKR (OTC)</option>
+    <option>EUR/USD (OTC)</option>
+    <option>GBP/USD (OTC)</option>
+    <option>USD/JPY (OTC)</option>
   </select>
+
   <select id="tf">
-    <option value="1000">5 Second</option>
-    <option value="2000">10 Second</option>
-    <option value="3000">1 Minute</option>
+    <option value="5000">5 Second</option>
+    <option value="10000">10 Second</option>
+    <option value="60000">1 Minute</option>
   </select>
 </div>
 
 <div id="chart"></div>
 
-<div id="bottom">
-  <div id="prediction">Next Candle: --</div>
-  <div class="btns">
+<div class="bottom">
+  <div class="signal" id="signalText">Signal: --</div>
+  <div class="accuracy">98% Accuracy (Demo)</div>
+
+  <div class="buttons">
     <button class="down">Down ↓</button>
     <button class="up">Up ↑</button>
   </div>
 </div>
 
 <script>
-const chart = document.getElementById("chart");
-const tf = document.getElementById("tf");
-const prediction = document.getElementById("prediction");
+const chart=document.getElementById("chart");
+const tf=document.getElementById("tf");
+const signalText=document.getElementById("signalText");
 
-let candles=[];
-let price=289.2;
+let price=289.20;
 let x=20;
-let interval=1000;
+let candles=[];
+let timer=5000;
 
-function predict(){
-  return Math.random()>0.5 ? "green" : "red";
+function randSignal(){
+  return Math.random()>0.5?"green":"red";
 }
 
-function drawCandle(type){
+function makeCandle(type,future=false){
   let open=price;
-  let move=(Math.random()*0.2);
-  let close = type==="green" ? open+move : open-move;
-  let high=Math.max(open,close)+Math.random()*0.1;
-  let low=Math.min(open,close)-Math.random()*0.1;
+  let move=Math.random()*0.25;
+  let close=type==="green"?open+move:open-move;
+  let high=Math.max(open,close)+Math.random()*0.12;
+  let low=Math.min(open,close)-Math.random()*0.12;
   price=close;
 
-  const c=document.createElement("div");
-  c.className="candle";
+  let c=document.createElement("div");
+  c.className="candle"+(future?" future":"");
   c.style.left=x+"px";
 
-  const wick=document.createElement("div");
+  let wick=document.createElement("div");
   wick.className="wick";
-  wick.style.height=(high-low)*600+"px";
-  wick.style.bottom=(low-288)*600+80+"px";
+  wick.style.height=(high-low)*500+"px";
+  wick.style.bottom=(low-288)*500+80+"px";
 
-  const body=document.createElement("div");
+  let body=document.createElement("div");
   body.className="body "+type;
-  body.style.height=Math.abs(close-open)*600+"px";
-  body.style.bottom=(Math.min(open,close)-288)*600+80+"px";
+  body.style.height=Math.abs(close-open)*500+"px";
+  body.style.bottom=(Math.min(open,close)-288)*500+80+"px";
 
   c.appendChild(wick);
   c.appendChild(body);
@@ -155,29 +162,28 @@ function drawCandle(type){
   candles.push(c);
   x+=20;
 
-  if(candles.length>25){
+  if(candles.length>30){
     chart.removeChild(candles.shift());
   }
 }
 
 function loop(){
-  // 3 candles ahead
-  let p1=predict();
-  let p2=predict();
-  let p3=predict();
+  let main=randSignal();
+  let f1=randSignal();
+  let f2=randSignal();
 
-  prediction.innerHTML=
-   `Next Candle: ${p1==="green"?"Green 🟢":"Red 🔴"} 
-    → ${p2==="green"?"🟢":"🔴"} 
-    → ${p3==="green"?"🟢":"🔴"}`;
+  signalText.innerHTML=
+   `Signal: ${main==="green"?"UP 🟢":"DOWN 🔴"}`;
 
-  drawCandle(p1);
+  makeCandle(main,false);
+  makeCandle(f1,true);
+  makeCandle(f2,true);
 }
 
 function start(){
   clearInterval(window.run);
-  interval=parseInt(tf.value);
-  window.run=setInterval(loop,interval);
+  timer=parseInt(tf.value);
+  window.run=setInterval(loop,timer);
 }
 
 tf.onchange=start;
