@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ai Vibes Studio | Informational Website</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO BASIC -->
+<meta name="description" content="Ai Vibes Studio provides informational content, guides, and resources. This website is designed to be Google AdSense friendly.">
+<meta name="keywords" content="information, guides, tech tips, earning knowledge, Pakistan">
+<meta name="author" content="Ai Vibes Studio">
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#0e0e0e;
+  color:#ffffff;
+}
+header{
+  background:#b00020;
+  padding:18px;
+  text-align:center;
+}
+nav{
+  display:flex;
+  justify-content:space-around;
+  background:#1b1b1b;
+  padding:10px 0;
+  flex-wrap:wrap;
+}
+nav button{
+  background:#0a7a0a;
+  border:none;
+  color:#fff;
+  padding:8px 14px;
+  margin:4px;
+  border-radius:6px;
+  cursor:pointer;
+}
+section{
+  display:none;
+  padding:18px;
+}
+section.active{
+  display:block;
+}
+.card{
+  background:#1f1f1f;
+  padding:16px;
+  margin-bottom:14px;
+  border-radius:10px;
+}
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:6px;
+  border:none;
+}
+button.action{
+  width:100%;
+  background:#008000;
+  color:#fff;
+  padding:10px;
+  border:none;
+  border-radius:6px;
+}
+footer{
+  text-align:center;
+  font-size:13px;
+  opacity:0.7;
+  padding:16px;
+}
+</style>
+
+<script>
+function show(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+</script>
+</head>
+
+<body>
+
+<header>
+  <h2>Ai Vibes Studio</h2>
+  <p>Informational & Content Platform</p>
+</header>
+
+<nav>
+  <button onclick="show('home')">Home</button>
+  <button onclick="show('about')">About</button>
+  <button onclick="show('contact')">Contact</button>
+  <button onclick="show('withdrawal')">Withdrawal Info</button>
+  <button onclick="show('login')">Login</button>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+  <div class="card">
+    <h3>Welcome</h3>
+    <p>
+      Welcome to Ai Vibes Studio. This website provides informational content,
+      guides, and knowledge-based articles for users.
+      The platform is designed to follow Google AdSense policies.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>What We Offer</h3>
+    <ul>
+      <li>Educational articles</li>
+      <li>Technology guides</li>
+      <li>General online knowledge</li>
+      <li>Safe & policy-compliant content</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="card">
+    <h3>About Us</h3>
+    <p>
+      Ai Vibes Studio is an independent informational platform.
+      Our goal is to share useful and easy-to-understand content
+      for users in Pakistan and worldwide.
+    </p>
+    <p>
+      This website does not sell plans, does not offer investments,
+      and does not promise user earnings.
+    </p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="card">
+    <h3>Contact Us</h3>
+    <p>Email: <strong>aivibesstudio009@gmail.com</strong></p>
+    <p>Phone / WhatsApp: <strong>03077857478</strong></p>
+    <p>
+      For general questions, content inquiries, or support,
+      please contact us during working hours.
+    </p>
+  </div>
+</section>
+
+<!-- WITHDRAWAL INFO -->
+<section id="withdrawal">
+  <div class="card">
+    <h3>Payment & Withdrawal Information</h3>
+    <p>
+      This website earns revenue through advertising platforms
+      such as Google AdSense.
+    </p>
+    <p>
+      Advertisement earnings are received by the website owner
+      through supported payment methods.
+    </p>
+    <ul>
+      <li>JazzCash (Owner Account)</li>
+      <li>EasyPaisa (Owner Account)</li>
+    </ul>
+    <p>
+      Note: Users do not make withdrawals from this website.
+      Payments mentioned are for business and operational purposes only.
+    </p>
+  </div>
+</section>
+
+<!-- LOGIN -->
+<section id="login">
+  <div class="card">
+    <h3>Login</h3>
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button class="action" onclick="alert('Login system is UI only')">Login</button>
+  </div>
+
+  <div class="card">
+    <h3>Sign Up</h3>
+    <input type="text" placeholder="Full Name">
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button class="action" onclick="alert('Signup system is UI only')">Create Account</button>
+  </div>
+</section>
+
+<footer>
+  © 2026 Ai Vibes Studio | All Rights Reserved
+</footer>
+
+</body>
+      </html>
