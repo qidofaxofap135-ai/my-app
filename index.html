@@ -2,47 +2,37 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Demo Earning App v2</title>
+<title>Demo Earning App v3</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 :root{
   --bg:#0f2027;
   --card:#111c22;
-  --text:#ffffff;
+  --text:#fff;
   --green:#2ecc71;
   --red:#e74c3c;
 }
-.light{
-  --bg:#f2f2f2;
-  --card:#ffffff;
-  --text:#000000;
-}
-
 body{
   margin:0;
   font-family:Arial, sans-serif;
   background:var(--bg);
   color:var(--text);
 }
-
 .hidden{display:none}
-
 .top{
   padding:15px;
   text-align:center;
   font-size:20px;
   font-weight:bold;
 }
-
 .card{
   background:var(--card);
-  margin:15px;
+  margin:12px;
   padding:15px;
   border-radius:12px;
 }
-
-input,button,select{
+input,button{
   width:100%;
   padding:12px;
   margin:8px 0;
@@ -50,43 +40,27 @@ input,button,select{
   border-radius:8px;
   font-size:15px;
 }
-
-input,select{
-  background:#fff;
-  color:#000;
-}
-
+input{background:#fff;color:#000}
 button{
   background:var(--green);
   color:#fff;
   font-weight:bold;
 }
-
 .btn-red{background:var(--red)}
+.small{font-size:12px;opacity:0.85}
 
 .nav{
   position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
+  bottom:0;left:0;right:0;
   display:flex;
   background:#000;
 }
-
 .nav button{
   flex:1;
-  background:#000;
   border-radius:0;
+  background:#000;
 }
-
-.nav button.active{
-  background:var(--green);
-}
-
-.small{
-  font-size:12px;
-  opacity:0.8;
-}
+.nav button.active{background:var(--green)}
 </style>
 </head>
 
@@ -102,9 +76,9 @@ button{
   <div class="card">
     <input placeholder="Gmail or Phone">
     <input type="password" placeholder="Password">
-    <button onclick="toOTP()">Continue</button>
+    <button onclick="goOTP()">Continue</button>
     <p class="small">
-      OTP ke liye is number par message karein:<br>
+      OTP ke liye message karein:<br>
       <b>03077857478</b>
     </p>
   </div>
@@ -115,57 +89,54 @@ button{
   <div class="top">OTP Verification</div>
   <div class="card">
     <input id="otpInput" placeholder="Enter OTP">
-    <button onclick="verify()">Verify</button>
-    <p class="small">OTP user ko show nahi hota (Demo)</p>
+    <button onclick="verifyOTP()">Verify</button>
   </div>
 </div>
 
 <!-- HOME -->
 <div id="home" class="hidden">
   <div class="top">🏠 Home</div>
-
   <div class="card">
-    <h3>Balance: ₹50</h3>
-    <p class="small">Demo wallet</p>
-    <button onclick="playSound()">Claim Daily Bonus (Demo)</button>
-  </div>
-
-  <div class="card">
-    <h3>Theme</h3>
-    <button onclick="toggleTheme()">Dark / Light Switch</button>
-  </div>
-
-  <div class="card">
-    <h3>Referral</h3>
-    <p>Bonus: ₹10 share | ₹50 plan bonus</p>
-    <input id="ref" value="https://demo-app.io/ref=123" readonly>
-    <button onclick="copy()">Copy Link</button>
+    <h3>Wallet: ₹50</h3>
+    <p class="small">Demo balance</p>
   </div>
 </div>
 
-<!-- HISTORY -->
-<div id="history" class="hidden">
-  <div class="top">📊 Earnings History</div>
-  <div class="card">
-    <p>Day 1 – ₹10</p>
-    <p>Day 2 – ₹15</p>
-    <p>Day 3 – ₹25</p>
-    <p class="small">Fake demo data</p>
-  </div>
+<!-- PLANS -->
+<div id="plans" class="hidden">
+  <div class="top">💼 Plans</div>
+
+  <script>
+    const planData = [
+      {p:100,b:50,d:"3 Weeks"},
+      {p:300,b:70,d:"1 Month"},
+      {p:500,b:120,d:"1 Month"},
+      {p:800,b:200,d:"2 Months"},
+      {p:1000,b:280,d:"2 Months"},
+      {p:1500,b:450,d:"3 Months"},
+      {p:2000,b:650,d:"3 Months"},
+      {p:3000,b:1000,d:"4 Months"},
+      {p:5000,b:1800,d:"6 Months"},
+      {p:8000,b:3000,d:"1 Year"}
+    ];
+  </script>
+
+  <div id="planList"></div>
 </div>
 
-<!-- WITHDRAW -->
-<div id="withdraw" class="hidden">
-  <div class="top">💸 Withdraw</div>
+<!-- PAYMENT -->
+<div id="payment" class="hidden">
+  <div class="top">💳 Plan Payment</div>
   <div class="card">
-    <select>
-      <option>JazzCash</option>
-      <option>Easypaisa</option>
-    </select>
-    <input placeholder="Account Number">
-    <input placeholder="Amount (Max ₹150)">
-    <button class="btn-red" onclick="playSound()">Submit (Demo)</button>
-    <p class="small">Processing 2–10 hours (Demo)</p>
+    <p><b>JazzCash Account:</b></p>
+    <p>📱 03245549182</p>
+    <p>👤 Name: Jhandir Ahmed</p>
+    <hr>
+    <p class="small">
+      Payment ke baad screenshot is number par bhejen:
+      <br><b>03077857478</b>
+    </p>
+    <button class="btn-red" onclick="backToPlans()">Back</button>
   </div>
 </div>
 
@@ -180,56 +151,67 @@ button{
 
 <!-- NAV -->
 <div id="nav" class="nav hidden">
-  <button class="active" onclick="show('home')">Home</button>
-  <button onclick="show('history')">History</button>
-  <button onclick="show('withdraw')">Withdraw</button>
-  <button onclick="show('support')">Support</button>
+  <button class="active" onclick="showPage('home')">Home</button>
+  <button onclick="showPage('plans')">Plans</button>
+  <button onclick="showPage('support')">Support</button>
 </div>
 
 <script>
 const OTP="786900";
 
-function toOTP(){
-  playSound();
-  login.classList.add('hidden');
-  otp.classList.remove('hidden');
+function sound(){document.getElementById("beep").play();}
+
+function goOTP(){
+  sound();
+  login.classList.add("hidden");
+  otp.classList.remove("hidden");
 }
 
-function verify(){
+function verifyOTP(){
+  sound();
   if(otpInput.value===OTP){
-    playSound();
-    otp.classList.add('hidden');
-    home.classList.remove('hidden');
-    nav.classList.remove('hidden');
+    otp.classList.add("hidden");
+    home.classList.remove("hidden");
+    nav.classList.remove("hidden");
   }else{
     alert("Wrong OTP (Demo)");
   }
 }
 
-function show(id){
-  playSound();
-  ['home','history','withdraw','support'].forEach(x=>{
-    document.getElementById(x).classList.add('hidden');
+function showPage(id){
+  sound();
+  ["home","plans","support","payment"].forEach(x=>{
+    document.getElementById(x).classList.add("hidden");
   });
-  document.getElementById(id).classList.remove('hidden');
+  document.getElementById(id).classList.remove("hidden");
 }
 
-function copy(){
-  ref.select();
-  document.execCommand("copy");
-  playSound();
-  alert("Copied!");
+function buyPlan(){
+  sound();
+  plans.classList.add("hidden");
+  payment.classList.remove("hidden");
 }
 
-function toggleTheme(){
-  document.body.classList.toggle('light');
-  playSound();
+function backToPlans(){
+  sound();
+  payment.classList.add("hidden");
+  plans.classList.remove("hidden");
 }
 
-function playSound(){
-  document.getElementById('beep').play();
-}
+const list=document.getElementById("planList");
+planData.forEach((x,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+    <h3>Plan ${i+1}</h3>
+    <p>Price: ₹${x.p}</p>
+    <p>Bonus: ₹${x.b}</p>
+    <p>Duration: ${x.d}</p>
+    <button onclick="buyPlan()">Buy Plan</button>
+  `;
+  list.appendChild(d);
+});
 </script>
 
 </body>
-                           </html>
+  </html>
