@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quotex Live Candle Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  background:#081a1f;
+  color:#fff;
+  font-family:Arial, sans-serif;
+}
+.top{
+  display:flex;
+  gap:10px;
+  padding:12px;
+  background:#0f2a33;
+}
+select{
+  background:#132f38;
+  color:#fff;
+  border:1px solid #1f4b57;
+  padding:6px 10px;
+  border-radius:5px;
+}
+#chart{
+  position:relative;
+  height:65vh;
+  background:#081a1f;
+  overflow:hidden;
+}
+.candle{
+  position:absolute;
+  width:12px;
+}
+.wick{
+  position:absolute;
+  width:2px;
+  left:5px;
+  background:#bbb;
+}
+.body{
+  position:absolute;
+  width:100%;
+  border-radius:2px;
+}
+.green{background:#1ec98b;}
+.red{background:#e74c3c;}
+.future{opacity:0.35;}
+.bottom{
+  padding:14px;
+  background:#0f2a33;
+}
+.signal{
+  font-size:16px;
+  margin-bottom:6px;
+}
+.buttons{
+  display:flex;
+  gap:10px;
+}
+button{
+  flex:1;
+  padding:14px;
+  font-size:18px;
+  border:none;
+  border-radius:6px;
+  color:#fff;
+}
+.up{background:#1ec98b;}
+.down{background:#e74c3c;}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <select>
+    <option>USD/PKR (OTC)</option>
+    <option>EUR/USD (OTC)</option>
+    <option>GBP/USD (OTC)</option>
+    <option>AUD/CAD (OTC)</option>
+  </select>
+
+  <select id="tf">
+    <option value="5000">5 Second</option>
+    <option value="10000">10 Second</option>
+    <option value="60000" selected>1 Minute</option>
+  </select>
+</div>
+
+<div id="chart"></div>
+
+<div class="bottom">
+  <div class="signal" id="signal">Signal: --</div>
+  <div style="opacity:.7;font-size:13px;">98% Accuracy (Demo)</div>
+
+  <div class="buttons">
+    <button class="down">Down ↓</button>
+    <button class="up">Up ↑</button>
+  </div>
+</div>
+
+<script>
+const chart=document.getElementById("chart");
+const tf=document.getElementById("tf");
+const signal=document.getElementById("signal");
+
+let price=289.2;
+let x=20;
+let candles=[];
+let interval=60000;
+
+function rand(min,max){
+  return Math.random()*(max-min)+min;
+}
+
+// Generate REAL candle types
+function generateCandle(){
+  let open=price;
+  let type=Math.random();
+
+  let close, high, low;
+
+  if(type<0.33){ // Hammer
+    close=open+rand(-0.05,0.05);
+    low=Math.min(open,close)-rand(0.3,0.45);
+    high=Math.max(open,close)+rand(0.05,0.1);
+  }else if(type<0.66){ // Shooting Star
+    close=open+rand(-0.05,0.05);
+    high=Math.max(open,close)+rand(0.3,0.45);
+    low=Math.min(open,close)-rand(0.05,0.1);
+  }else{ // Normal candle
+    close=open+rand(-0.25,0.25);
+    high=Math.max(open,close)+rand(0.05,0.15);
+    low=Math.min(open,close)-rand(0.05,0.15);
+  }
+
+  price=close;
+  return {open,close,high,low};
+}
+
+function drawCandle(data,future=false){
+  let scale=420;
+  let base=80;
+
+  let c=document.createElement("div");
+  c.className="candle"+(future?" future":"");
+  c.style.left=x+"px";
+
+  let wick=document.createElement("div");
+  wick.className="wick";
+  wick.style.height=(data.high-data.low)*scale+"px";
+  wick.style.bottom=(data.low-288)*scale+base+"px";
+
+  let body=document.createElement("div");
+  body.className="body "+(data.close>=data.open?"green":"red");
+  body.style.height=Math.abs(data.close-data.open)*scale+"px";
+  body.style.bottom=(Math.min(data.open,data.close)-288)*scale+base+"px";
+
+  c.appendChild(wick);
+  c.appendChild(body);
+  chart.appendChild(c);
+
+  candles.push(c);
+  x+=20;
+
+  if(candles.length>32){
+    chart.removeChild(candles.shift());
+  }
+}
+
+function tick(){
+  let main=generateCandle();
+  let f1=generateCandle();
+  let f2=generateCandle();
+
+  signal.innerHTML=
+   "Signal: "+(main.close>=main.open?"UP 🟢":"DOWN 🔴");
+
+  drawCandle(main,false);
+  drawCandle(f1,true);
+  drawCandle(f2,true);
+}
+
+function start(){
+  clearInterval(window.run);
+  interval=parseInt(tf.value);
+  window.run=setInterval(tick,interval);
+}
+
+tf.onchange=start;
+start();
+</script>
+
+</body>
+</html>
