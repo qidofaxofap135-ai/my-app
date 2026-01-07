@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Demo Trading App</title>
-
+<title>Trading Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
   margin:0;
@@ -12,84 +11,136 @@ body{
   background:#0f2027;
   color:#fff;
 }
-.hidden{display:none}
-
-/* Common */
-button,input,select{
+.screen{display:none;padding:20px}
+.active{display:block}
+input,button,select{
   width:100%;
-  padding:12px;
-  margin-top:10px;
+  padding:14px;
+  margin:10px 0;
   border:none;
-  border-radius:6px;
+  border-radius:8px;
   font-size:16px;
 }
 button{background:#1abc9c;color:#000;font-weight:bold}
-
-/* Login */
-.box{
-  padding:20px;
-}
-h2{text-align:center}
-
-/* Chart */
-#chart{
-  height:260px;
+.center{text-align:center}
+.chart{
+  height:240px;
+  background:#08161d;
   display:flex;
   align-items:flex-end;
-  gap:6px;
   padding:10px;
-  background:#07161d;
+  gap:6px;
 }
 .candle{
   width:14px;
-  position:relative;
+  animation:grow 1s infinite alternate;
 }
 .green{background:#2ecc71}
 .red{background:#e74c3c}
-.wick{
-  width:2px;
-  background:#ccc;
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
+@keyframes grow{
+  from{height:40px}
+  to{height:180px}
 }
-
-/* Footer */
 .footer{
   position:fixed;
   bottom:0;
-  width:100%;
-  background:#0b1b22;
+  left:0;
+  right:0;
   padding:10px;
-}
-.actions{
+  background:#0b1a21;
   display:flex;
   gap:10px;
 }
 .up{background:#2ecc71}
 .down{background:#e74c3c}
+.timer{margin-top:10px;font-size:18px}
 </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
-<div id="login" class="box">
-  <h2>Sign Up / Login</h2>
-  <input placeholder="Gmail or Phone">
+<div id="login" class="screen active">
+  <h2 class="center">Sign Up / Login</h2>
+  <input type="tel" placeholder="Phone Number">
   <input type="password" placeholder="Password">
   <button onclick="goOTP()">Continue</button>
-  <p style="font-size:13px;margin-top:15px">
-    OTP ke liye is number par message karein:<br>
-    <b>03077857478</b>
-  </p>
+  <p class="center">OTP ke liye is number par message karein:<br><b>03077857478</b></p>
 </div>
 
 <!-- OTP -->
-<div id="otp" class="box hidden">
-  <h2>Enter OTP</h2>
-  <input id="otpInput" placeholder="Enter OTP">
-  <button onclick="verifyOTP()">Verify</button>
-  <p style="font-size:12px">
-    Jab tak sahi OTP na ho, app open nahi hogi.
-  </
+<div id="otp" class="screen">
+  <h2 class="center">Enter OTP</h2>
+  <input type="password" id="otpInput" placeholder="6 digit OTP">
+  <button onclick="checkOTP()">Confirm</button>
+</div>
+
+<!-- MARKET -->
+<div id="market" class="screen">
+  <div>
+    <select>
+      <option>USD/PKR (OTC)</option>
+      <option>EUR/USD (OTC)</option>
+      <option>GBP/USD (OTC)</option>
+    </select>
+    <select>
+      <option>1 Minute</option>
+      <option>10 Seconds</option>
+      <option>5 Seconds</option>
+    </select>
+  </div>
+
+  <div class="chart" id="chart"></div>
+
+  <div class="timer center">
+    Timer: <span id="time">60</span>s<br>
+    Signal: <b id="signal">UP</b>
+  </div>
+</div>
+
+<div class="footer" id="tradeBtns" style="display:none">
+  <button class="down">Down ↓</button>
+  <button class="up">Up ↑</button>
+</div>
+
+<script>
+function goOTP(){
+  document.getElementById('login').classList.remove('active');
+  document.getElementById('otp').classList.add('active');
+}
+
+function checkOTP(){
+  const otp = document.getElementById('otpInput').value;
+  if(otp === "786900"){
+    document.getElementById('otp').classList.remove('active');
+    document.getElementById('market').classList.add('active');
+    document.getElementById('tradeBtns').style.display="flex";
+    startMarket();
+  }else{
+    alert("Wrong OTP");
+  }
+}
+
+function startMarket(){
+  const chart=document.getElementById('chart');
+  setInterval(()=>{
+    chart.innerHTML="";
+    for(let i=0;i<8;i++){
+      const c=document.createElement('div');
+      c.className="candle "+(Math.random()>0.5?"green":"red");
+      chart.appendChild(c);
+    }
+    document.getElementById('signal').innerText =
+      Math.random()>0.5?"UP":"DOWN";
+  },1000);
+
+  let t=60;
+  setInterval(()=>{
+    t--; if(t<=0)t=60;
+    document.getElementById('time').innerText=t;
+  },1000);
+}
+</script>
+
+</body>
+  </html>
