@@ -116,7 +116,7 @@ function createCandle(){
   chart.appendChild(candle);
 
   let next = Math.random() > 0.5 ? "GREEN 🟢" : "RED 🔴";
-  signalSpan.textContent = "Next Candle: " + next + " (Demo)";
+  signalSpan.textContent = "Next Candle: " + next + " (live)";
 }
 </script>
 
