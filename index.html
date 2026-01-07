@@ -2,145 +2,234 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Trading Demo</title>
+<title>Demo Earning App v2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
+:root{
+  --bg:#0f2027;
+  --card:#111c22;
+  --text:#ffffff;
+  --green:#2ecc71;
+  --red:#e74c3c;
+}
+.light{
+  --bg:#f2f2f2;
+  --card:#ffffff;
+  --text:#000000;
+}
+
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:#0f2027;
-  color:#fff;
+  background:var(--bg);
+  color:var(--text);
 }
-.screen{display:none;padding:20px}
-.active{display:block}
+
+.hidden{display:none}
+
+.top{
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.card{
+  background:var(--card);
+  margin:15px;
+  padding:15px;
+  border-radius:12px;
+}
+
 input,button,select{
   width:100%;
-  padding:14px;
-  margin:10px 0;
+  padding:12px;
+  margin:8px 0;
   border:none;
   border-radius:8px;
-  font-size:16px;
+  font-size:15px;
 }
-button{background:#1abc9c;color:#000;font-weight:bold}
-.center{text-align:center}
-.chart{
-  height:240px;
-  background:#08161d;
-  display:flex;
-  align-items:flex-end;
-  padding:10px;
-  gap:6px;
+
+input,select{
+  background:#fff;
+  color:#000;
 }
-.candle{
-  width:14px;
-  animation:grow 1s infinite alternate;
+
+button{
+  background:var(--green);
+  color:#fff;
+  font-weight:bold;
 }
-.green{background:#2ecc71}
-.red{background:#e74c3c}
-@keyframes grow{
-  from{height:40px}
-  to{height:180px}
-}
-.footer{
+
+.btn-red{background:var(--red)}
+
+.nav{
   position:fixed;
   bottom:0;
   left:0;
   right:0;
-  padding:10px;
-  background:#0b1a21;
   display:flex;
-  gap:10px;
+  background:#000;
 }
-.up{background:#2ecc71}
-.down{background:#e74c3c}
-.timer{margin-top:10px;font-size:18px}
+
+.nav button{
+  flex:1;
+  background:#000;
+  border-radius:0;
+}
+
+.nav button.active{
+  background:var(--green);
+}
+
+.small{
+  font-size:12px;
+  opacity:0.8;
+}
 </style>
 </head>
 
 <body>
 
+<audio id="beep">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+
 <!-- LOGIN -->
-<div id="login" class="screen active">
-  <h2 class="center">Sign Up / Login</h2>
-  <input type="tel" placeholder="Phone Number">
-  <input type="password" placeholder="Password">
-  <button onclick="goOTP()">Continue</button>
-  <p class="center">OTP ke liye is number par message karein:<br><b>03077857478</b></p>
+<div id="login">
+  <div class="top">Login / Sign Up (Demo)</div>
+  <div class="card">
+    <input placeholder="Gmail or Phone">
+    <input type="password" placeholder="Password">
+    <button onclick="toOTP()">Continue</button>
+    <p class="small">
+      OTP ke liye is number par message karein:<br>
+      <b>03077857478</b>
+    </p>
+  </div>
 </div>
 
 <!-- OTP -->
-<div id="otp" class="screen">
-  <h2 class="center">Enter OTP</h2>
-  <input type="password" id="otpInput" placeholder="6 digit OTP">
-  <button onclick="checkOTP()">Confirm</button>
-</div>
-
-<!-- MARKET -->
-<div id="market" class="screen">
-  <div>
-    <select>
-      <option>USD/PKR (OTC)</option>
-      <option>EUR/USD (OTC)</option>
-      <option>GBP/USD (OTC)</option>
-    </select>
-    <select>
-      <option>1 Minute</option>
-      <option>10 Seconds</option>
-      <option>5 Seconds</option>
-    </select>
-  </div>
-
-  <div class="chart" id="chart"></div>
-
-  <div class="timer center">
-    Timer: <span id="time">60</span>s<br>
-    Signal: <b id="signal">UP</b>
+<div id="otp" class="hidden">
+  <div class="top">OTP Verification</div>
+  <div class="card">
+    <input id="otpInput" placeholder="Enter OTP">
+    <button onclick="verify()">Verify</button>
+    <p class="small">OTP user ko show nahi hota (Demo)</p>
   </div>
 </div>
 
-<div class="footer" id="tradeBtns" style="display:none">
-  <button class="down">Down ↓</button>
-  <button class="up">Up ↑</button>
+<!-- HOME -->
+<div id="home" class="hidden">
+  <div class="top">🏠 Home</div>
+
+  <div class="card">
+    <h3>Balance: ₹50</h3>
+    <p class="small">Demo wallet</p>
+    <button onclick="playSound()">Claim Daily Bonus (Demo)</button>
+  </div>
+
+  <div class="card">
+    <h3>Theme</h3>
+    <button onclick="toggleTheme()">Dark / Light Switch</button>
+  </div>
+
+  <div class="card">
+    <h3>Referral</h3>
+    <p>Bonus: ₹10 share | ₹50 plan bonus</p>
+    <input id="ref" value="https://demo-app.io/ref=123" readonly>
+    <button onclick="copy()">Copy Link</button>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div id="history" class="hidden">
+  <div class="top">📊 Earnings History</div>
+  <div class="card">
+    <p>Day 1 – ₹10</p>
+    <p>Day 2 – ₹15</p>
+    <p>Day 3 – ₹25</p>
+    <p class="small">Fake demo data</p>
+  </div>
+</div>
+
+<!-- WITHDRAW -->
+<div id="withdraw" class="hidden">
+  <div class="top">💸 Withdraw</div>
+  <div class="card">
+    <select>
+      <option>JazzCash</option>
+      <option>Easypaisa</option>
+    </select>
+    <input placeholder="Account Number">
+    <input placeholder="Amount (Max ₹150)">
+    <button class="btn-red" onclick="playSound()">Submit (Demo)</button>
+    <p class="small">Processing 2–10 hours (Demo)</p>
+  </div>
+</div>
+
+<!-- SUPPORT -->
+<div id="support" class="hidden">
+  <div class="top">📞 Support</div>
+  <div class="card">
+    <p>WhatsApp Support</p>
+    <b>03077857478</b>
+  </div>
+</div>
+
+<!-- NAV -->
+<div id="nav" class="nav hidden">
+  <button class="active" onclick="show('home')">Home</button>
+  <button onclick="show('history')">History</button>
+  <button onclick="show('withdraw')">Withdraw</button>
+  <button onclick="show('support')">Support</button>
 </div>
 
 <script>
-function goOTP(){
-  document.getElementById('login').classList.remove('active');
-  document.getElementById('otp').classList.add('active');
+const OTP="786900";
+
+function toOTP(){
+  playSound();
+  login.classList.add('hidden');
+  otp.classList.remove('hidden');
 }
 
-function checkOTP(){
-  const otp = document.getElementById('otpInput').value;
-  if(otp === "786900"){
-    document.getElementById('otp').classList.remove('active');
-    document.getElementById('market').classList.add('active');
-    document.getElementById('tradeBtns').style.display="flex";
-    startMarket();
+function verify(){
+  if(otpInput.value===OTP){
+    playSound();
+    otp.classList.add('hidden');
+    home.classList.remove('hidden');
+    nav.classList.remove('hidden');
   }else{
-    alert("Wrong OTP");
+    alert("Wrong OTP (Demo)");
   }
 }
 
-function startMarket(){
-  const chart=document.getElementById('chart');
-  setInterval(()=>{
-    chart.innerHTML="";
-    for(let i=0;i<8;i++){
-      const c=document.createElement('div');
-      c.className="candle "+(Math.random()>0.5?"green":"red");
-      chart.appendChild(c);
-    }
-    document.getElementById('signal').innerText =
-      Math.random()>0.5?"UP":"DOWN";
-  },1000);
+function show(id){
+  playSound();
+  ['home','history','withdraw','support'].forEach(x=>{
+    document.getElementById(x).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+}
 
-  let t=60;
-  setInterval(()=>{
-    t--; if(t<=0)t=60;
-    document.getElementById('time').innerText=t;
-  },1000);
+function copy(){
+  ref.select();
+  document.execCommand("copy");
+  playSound();
+  alert("Copied!");
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  playSound();
+}
+
+function playSound(){
+  document.getElementById('beep').play();
 }
 </script>
 
 </body>
-  </html>
+</html>
