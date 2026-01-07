@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Demo Earning App v2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root{
+  --bg:#0f2027;
+  --card:#111c22;
+  --text:#ffffff;
+  --green:#2ecc71;
+  --red:#e74c3c;
+}
+.light{
+  --bg:#f2f2f2;
+  --card:#ffffff;
+  --text:#000000;
+}
+
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.hidden{display:none}
+
+.top{
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.card{
+  background:var(--card);
+  margin:15px;
+  padding:15px;
+  border-radius:12px;
+}
+
+input,button,select{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:none;
+  border-radius:8px;
+  font-size:15px;
+}
+
+input,select{
+  background:#fff;
+  color:#000;
+}
+
+button{
+  background:var(--green);
+  color:#fff;
+  font-weight:bold;
+}
+
+.btn-red{background:var(--red)}
+
+.nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  display:flex;
+  background:#000;
+}
+
+.nav button{
+  flex:1;
+  background:#000;
+  border-radius:0;
+}
+
+.nav button.active{
+  background:var(--green);
+}
+
+.small{
+  font-size:12px;
+  opacity:0.8;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="beep">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="top">Login / Sign Up (Demo)</div>
+  <div class="card">
+    <input placeholder="Gmail or Phone">
+    <input type="password" placeholder="Password">
+    <button onclick="toOTP()">Continue</button>
+    <p class="small">
+      OTP ke liye is number par message karein:<br>
+      <b>03077857478</b>
+    </p>
+  </div>
+</div>
+
+<!-- OTP -->
+<div id="otp" class="hidden">
+  <div class="top">OTP Verification</div>
+  <div class="card">
+    <input id="otpInput" placeholder="Enter OTP">
+    <button onclick="verify()">Verify</button>
+    <p class="small">OTP user ko show nahi hota (Demo)</p>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="hidden">
+  <div class="top">🏠 Home</div>
+
+  <div class="card">
+    <h3>Balance: ₹50</h3>
+    <p class="small">Demo wallet</p>
+    <button onclick="playSound()">Claim Daily Bonus (Demo)</button>
+  </div>
+
+  <div class="card">
+    <h3>Theme</h3>
+    <button onclick="toggleTheme()">Dark / Light Switch</button>
+  </div>
+
+  <div class="card">
+    <h3>Referral</h3>
+    <p>Bonus: ₹10 share | ₹50 plan bonus</p>
+    <input id="ref" value="https://demo-app.io/ref=123" readonly>
+    <button onclick="copy()">Copy Link</button>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div id="history" class="hidden">
+  <div class="top">📊 Earnings History</div>
+  <div class="card">
+    <p>Day 1 – ₹10</p>
+    <p>Day 2 – ₹15</p>
+    <p>Day 3 – ₹25</p>
+    <p class="small">Fake demo data</p>
+  </div>
+</div>
+
+<!-- WITHDRAW -->
+<div id="withdraw" class="hidden">
+  <div class="top">💸 Withdraw</div>
+  <div class="card">
+    <select>
+      <option>JazzCash</option>
+      <option>Easypaisa</option>
+    </select>
+    <input placeholder="Account Number">
+    <input placeholder="Amount (Max ₹150)">
+    <button class="btn-red" onclick="playSound()">Submit (Demo)</button>
+    <p class="small">Processing 2–10 hours (Demo)</p>
+  </div>
+</div>
+
+<!-- SUPPORT -->
+<div id="support" class="hidden">
+  <div class="top">📞 Support</div>
+  <div class="card">
+    <p>WhatsApp Support</p>
+    <b>03077857478</b>
+  </div>
+</div>
+
+<!-- NAV -->
+<div id="nav" class="nav hidden">
+  <button class="active" onclick="show('home')">Home</button>
+  <button onclick="show('history')">History</button>
+  <button onclick="show('withdraw')">Withdraw</button>
+  <button onclick="show('support')">Support</button>
+</div>
+
+<script>
+const OTP="786900";
+
+function toOTP(){
+  playSound();
+  login.classList.add('hidden');
+  otp.classList.remove('hidden');
+}
+
+function verify(){
+  if(otpInput.value===OTP){
+    playSound();
+    otp.classList.add('hidden');
+    home.classList.remove('hidden');
+    nav.classList.remove('hidden');
+  }else{
+    alert("Wrong OTP (Demo)");
+  }
+}
+
+function show(id){
+  playSound();
+  ['home','history','withdraw','support'].forEach(x=>{
+    document.getElementById(x).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function copy(){
+  ref.select();
+  document.execCommand("copy");
+  playSound();
+  alert("Copied!");
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  playSound();
+}
+
+function playSound(){
+  document.getElementById('beep').play();
+}
+</script>
+
+</body>
+  </html>
