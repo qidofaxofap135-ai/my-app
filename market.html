@@ -1,0 +1,351 @@
+<!DOCTYPE html><!--
+  FINORIX-STYLE OTC CANDLE DEMO (HTML ONLY)
+  ------------------------------------------------------------
+  NOTE:
+  • Ye demo sirf UI / simulation hai (real Quotex ya real prices nahi).
+  • Candles canvas par animate hoti hain.
+  • Timeframes: 5s, 10s, 1m
+  • Market switch (OTC-style names)
+  • Timer visible (image jaisa dashed lines + timer box)
+  • Mobile friendly (Chrome / Infinix tested style)
+  ------------------------------------------------------------
+--><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finorix Pro • OTC Candle Demo</title>  <!-- =====================
+       GLOBAL STYLES
+       ===================== -->  <style>
+    :root{
+      --bg:#0b0b0b;
+      --panel:#1f1f1f;
+      --panel-2:#2a2a2a;
+      --border:#3a3a3a;
+      --green:#2ecc71;
+      --red:#e74c3c;
+      --text:#ffffff;
+      --muted:#bdbdbd;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* =====================
+       HEADER
+       ===================== */
+    header{
+      background:linear-gradient(#2b2b2b,#232323);
+      border-bottom:1px solid var(--border);
+      padding:8px 10px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .brand{
+      font-weight:800;
+      letter-spacing:.6px;
+    }
+
+    .brand small{
+      display:block;
+      color:#ff4d4d;
+      font-weight:600;
+      font-size:11px;
+      margin-top:2px;
+    }
+
+    .status{
+      font-size:12px;
+      color:#7CFF7C;
+      font-weight:700;
+    }
+
+    /* =====================
+       MARKET BAR
+       ===================== */
+    .market-bar{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      padding:8px;
+      background:var(--panel);
+      border-bottom:1px solid var(--border);
+    }
+
+    .market-bar select{
+      flex:1;
+      background:#000;
+      color:#fff;
+      border:1px solid #444;
+      border-radius:6px;
+      padding:7px 8px;
+      font-size:14px;
+    }
+
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 8px;
+      background:#111;
+      border:1px solid #333;
+      border-radius:14px;
+      font-size:12px;
+    }
+
+    .toggle .dot{
+      width:10px;height:10px;border-radius:50%;background:#1bd760;
+    }
+
+    /* =====================
+       CHART AREA
+       ===================== */
+    .chart-wrap{
+      position:relative;
+      height:340px;
+      margin:8px;
+      background:#000;
+      border:1px solid #1e1e1e;
+      overflow:hidden;
+    }
+
+    canvas{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+
+    /* dashed horizontal price line */
+    .hline{
+      position:absolute;
+      left:0;right:0;top:50%;
+      border-top:1px dashed #7a7a7a;
+      opacity:.85;
+      pointer-events:none;
+    }
+
+    /* dashed vertical expiry line */
+    .vline{
+      position:absolute;
+      top:0;bottom:0;right:78px;
+      border-left:1px dashed #7a7a7a;
+      opacity:.85;
+      pointer-events:none;
+    }
+
+    .timer{
+      position:absolute;
+      right:10px;
+      bottom:10px;
+      background:#0f0f0f;
+      border:1px solid #2b2b2b;
+      padding:6px 10px;
+      border-radius:6px;
+      font-weight:800;
+      letter-spacing:.5px;
+    }
+
+    /* =====================
+       ACTION BUTTONS
+       ===================== */
+    footer{
+      display:flex;
+      gap:10px;
+      padding:10px;
+    }
+
+    footer button{
+      flex:1;
+      padding:14px 0;
+      font-size:18px;
+      border:none;
+      border-radius:10px;
+      color:#fff;
+      font-weight:700;
+    }
+
+    .btn-down{background:var(--red)}
+    .btn-up{background:var(--green)}
+
+    /* =====================
+       FOOT NOTE
+       ===================== */
+    .note{
+      padding:6px 12px 14px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+  </style></head>
+<body>  <!-- =====================
+       HEADER UI
+       ===================== -->  <header>
+    <div class="topbar">
+      <div class="brand">FINORIX PRO<small>NARY SOFTWARE</small></div>
+      <div class="status">● Activated</div>
+    </div>
+  </header>  <!-- =====================
+       MARKET CONTROLS
+       ===================== -->  <div class="market-bar">
+    <select id="pair">
+      <option>USD/PKR (OTC)</option>
+      <option>USD/JPY (OTC)</option>
+      <option>EUR/USD (OTC)</option>
+      <option>GBP/USD (OTC)</option>
+      <option>AUD/CAD (OTC)</option>
+    </select><select id="tf">
+  <option value="5">5s</option>
+  <option value="10">10s</option>
+  <option value="60" selected>1m</option>
+</select>
+
+<div class="toggle">
+  <div class="dot"></div>
+  <span>ON</span>
+</div>
+
+  </div>  <!-- =====================
+       CHART
+       ===================== -->  <div class="chart-wrap">
+    <canvas id="chart"></canvas>
+    <div class="hline"></div>
+    <div class="vline"></div>
+    <div class="timer" id="timer">00:00</div>
+  </div>  <!-- =====================
+       ACTIONS
+       ===================== -->  <footer>
+    <button class="btn-down">DOWN ↓</button>
+    <button class="btn-up">UP ↑</button>
+  </footer>  <div class="note">
+    Ye UI sirf demo ke liye hai. Candles simulated hain, real market data nahi.
+    Image ke bilkul qareeb layout, dashed lines aur timer same feel dene ke liye banaya gaya hai.
+  </div>  <!-- =====================
+       SCRIPT: CANDLE ENGINE
+       ===================== -->  <script>
+    // Canvas setup
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+
+    function resize(){
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Controls
+    const tfSelect = document.getElementById('tf');
+    const timerEl  = document.getElementById('timer');
+
+    // Candle data
+    let candles = [];
+    const maxCandles = 40; // screen par visible candles
+
+    // Price simulation base
+    let price = 100;
+
+    // Time handling
+    let tf = parseInt(tfSelect.value,10);
+    let remaining = tf;
+
+    tfSelect.addEventListener('change', ()=>{
+      tf = parseInt(tfSelect.value,10);
+      remaining = tf;
+    });
+
+    // Create initial candles
+    function seed(){
+      candles = [];
+      let p = price;
+      for(let i=0;i<maxCandles;i++){
+        let o = p;
+        let c = o + (Math.random()-0.5)*4;
+        let h = Math.max(o,c) + Math.random()*2;
+        let l = Math.min(o,c) - Math.random()*2;
+        candles.push({o,c,h,l});
+        p = c;
+      }
+      price = p;
+    }
+    seed();
+
+    // Draw candles
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const w = canvas.width / maxCandles;
+
+      // Find min/max
+      let min = Infinity, max = -Infinity;
+      candles.forEach(c=>{ min=Math.min(min,c.l); max=Math.max(max,c.h); });
+      const pad = (max-min)*0.2;
+      min -= pad; max += pad;
+
+      function y(v){ return canvas.height - ((v-min)/(max-min))*canvas.height; }
+
+      candles.forEach((c,i)=>{
+        const x = i*w + w*0.25;
+        const cw = w*0.5;
+        const up = c.c >= c.o;
+        ctx.strokeStyle = up ? '#ffffff' : '#ff3b3b';
+        ctx.fillStyle   = up ? '#ffffff' : '#ff3b3b';
+
+        // wick
+        ctx.beginPath();
+        ctx.moveTo(x+cw/2, y(c.h));
+        ctx.lineTo(x+cw/2, y(c.l));
+        ctx.stroke();
+
+        // body
+        const top = y(Math.max(c.o,c.c));
+        const bot = y(Math.min(c.o,c.c));
+        ctx.fillRect(x, top, cw, Math.max(2, bot-top));
+      });
+    }
+
+    // Update candle every frame (smooth movement)
+    function tick(){
+      const last = candles[candles.length-1];
+      last.c += (Math.random()-0.5)*0.4;
+      last.h = Math.max(last.h, last.c);
+      last.l = Math.min(last.l, last.c);
+      draw();
+    }
+
+    // New candle on expiry
+    function newCandle(){
+      const prev = candles[candles.length-1];
+      const o = prev.c;
+      const c = o + (Math.random()-0.5)*6;
+      const h = Math.max(o,c) + Math.random()*2;
+      const l = Math.min(o,c) - Math.random()*2;
+      candles.push({o,c,h,l});
+      if(candles.length > maxCandles) candles.shift();
+    }
+
+    // Timer loop
+    setInterval(()=>{
+      remaining--;
+      if(remaining <= 0){
+        remaining = tf;
+        newCandle();
+      }
+      const mm = String(Math.floor(remaining/60)).padStart(2,'0');
+      const ss = String(remaining%60).padStart(2,'0');
+      timerEl.textContent = mm+':'+ss;
+    },1000);
+
+    // Smooth animation
+    setInterval(tick, 100);
+  </script></body>
+</html>
