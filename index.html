@@ -2,172 +2,174 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>GIS | Knowledge & Information</title>
+<title>GIS – Knowledge • Guides • Information</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="GIS is an informational website sharing knowledge, guides, and educational content. Fully AdSense policy compliant.">
+<!-- SEO -->
+<meta name="description" content="GIS is an informational platform providing guides, tutorials, and general knowledge content for users worldwide.">
+<meta name="keywords" content="GIS, guides, information, knowledge, tutorials">
 <meta name="author" content="GIS">
 
 <style>
-*{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:Segoe UI, Arial, sans-serif;
-  background:#0f0f0f;
-  color:#fff;
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#0f0f0f;
+    color:#fff;
 }
 header{
-  background:linear-gradient(135deg,#b30000,#ff3333);
-  padding:28px 15px;
-  text-align:center;
+    background:linear-gradient(135deg,#c31432,#240b36);
+    padding:50px 20px;
+    text-align:center;
 }
-header h1{margin:0;font-size:34px}
-header p{opacity:.9}
-header button{
-  margin-top:15px;
-  padding:13px 28px;
-  background:#0aa84f;
-  border:none;
-  color:#fff;
-  border-radius:30px;
-  cursor:pointer;
+header h1{
+    margin:0;
+    font-size:36px;
+}
+header p{
+    opacity:0.9;
+}
+.btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:14px 30px;
+    background:#00c853;
+    color:#fff;
+    text-decoration:none;
+    border-radius:30px;
+    font-weight:bold;
 }
 nav{
-  display:flex;
-  justify-content:space-around;
-  flex-wrap:wrap;
-  background:#161616;
-  padding:10px;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    padding:15px;
+    background:#111;
+    flex-wrap:wrap;
 }
-nav button{
-  background:#222;
-  border:none;
-  color:#fff;
-  padding:8px 16px;
-  margin:4px;
-  border-radius:20px;
-  cursor:pointer;
+nav a{
+    color:#fff;
+    text-decoration:none;
+    background:#222;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:14px;
 }
-nav button:hover{background:#0aa84f}
-section{display:none;padding:20px}
-section.active{display:block}
+section{
+    padding:40px 20px;
+    max-width:900px;
+    margin:auto;
+}
 .card{
-  background:#1e1e1e;
-  padding:18px;
-  margin-bottom:15px;
-  border-radius:14px;
+    background:#1a1a1a;
+    padding:25px;
+    border-radius:15px;
+    margin-bottom:25px;
 }
-.card h3{color:#0ecf63;margin-top:0}
+h2{
+    color:#00c853;
+}
 footer{
-  text-align:center;
-  font-size:13px;
-  opacity:.7;
-  padding:18px;
+    text-align:center;
+    padding:20px;
+    font-size:14px;
+    opacity:0.6;
 }
 </style>
-
-<script>
-function show(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  window.scrollTo(0,0);
-}
-</script>
 </head>
 
 <body>
 
+<!-- HERO -->
 <header>
-  <h1>GIS</h1>
-  <p>Knowledge • Guides • Information</p>
-  <button onclick="show('home')">Get Started</button>
+    <h1>GIS</h1>
+    <p>Knowledge • Guides • Information</p>
+    <a href="#getstarted" class="btn">Get Started</a>
 </header>
 
+<!-- MENU -->
 <nav>
-  <button onclick="show('home')">Home</button>
-  <button onclick="show('about')">About Us</button>
-  <button onclick="show('contact')">Contact</button>
-  <button onclick="show('privacy')">Privacy Policy</button>
-  <button onclick="show('terms')">Terms</button>
+    <a href="#home">Home</a>
+    <a href="#about">About Us</a>
+    <a href="#contact">Contact</a>
+    <a href="#privacy">Privacy Policy</a>
+    <a href="#terms">Terms</a>
 </nav>
 
 <!-- HOME -->
-<section id="home" class="active">
-  <div class="card">
-    <h3>Welcome to GIS</h3>
-    <p>
-      GIS is an informational platform created to share helpful guides,
-      educational content, and general knowledge for users.
-    </p>
-  </div>
+<section id="home">
+    <div class="card">
+        <h2>Welcome to GIS</h2>
+        <p>
+            GIS is an informational platform created to share helpful guides,
+            educational content, and general knowledge for users.
+            Our goal is to provide clear, honest, and useful information.
+        </p>
+    </div>
 </section>
 
-<!-- ABOUT US -->
+<!-- GET STARTED -->
+<section id="getstarted">
+    <div class="card">
+        <h2>Get Started</h2>
+        <p>
+            Explore our guides and information to learn new skills,
+            understand digital topics, and stay informed.
+        </p>
+        <p>
+            We focus on quality content that follows Google policies
+            and provides real value to users.
+        </p>
+    </div>
+</section>
+
+<!-- ABOUT -->
 <section id="about">
-  <div class="card">
-    <h3>About Us</h3>
-    <p>
-      GIS is a content-based informational website. Our goal is to provide
-      clear, simple, and useful information for educational purposes only.
-    </p>
-    <p>
-      We do not offer investment schemes, guaranteed income, or financial promises.
-      All content is published in compliance with Google AdSense policies.
-    </p>
-  </div>
+    <div class="card">
+        <h2>About Us</h2>
+        <p>
+            GIS is a content-based website focused on knowledge sharing.
+            We publish informational articles, tutorials, and guides
+            for educational purposes only.
+        </p>
+    </div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
-  <div class="card">
-    <h3>Contact Us</h3>
-    <p><strong>Email:</strong> aivibesstudio009@gmail.com</p>
-    <p><strong>Phone / WhatsApp:</strong> 03077857478</p>
-    <p>
-      You may contact us for general inquiries or website-related support.
-    </p>
-  </div>
+    <div class="card">
+        <h2>Contact Us</h2>
+        <p>Email: <b>aivibesstudio009@gmail.com</b></p>
+        <p>Phone: <b>0307-7857478</b></p>
+    </div>
 </section>
 
-<!-- PRIVACY POLICY -->
+<!-- PRIVACY -->
 <section id="privacy">
-  <div class="card">
-    <h3>Privacy Policy</h3>
-    <p>
-      At GIS, we respect your privacy. We do not collect personal information
-      unless voluntarily provided by users.
-    </p>
-    <p>
-      Third-party services such as Google AdSense may use cookies to display
-      relevant advertisements based on user interests.
-    </p>
-    <p>
-      By using this website, you agree to the use of cookies as per Google policies.
-    </p>
-  </div>
+    <div class="card">
+        <h2>Privacy Policy</h2>
+        <p>
+            We respect user privacy. We do not collect personal data
+            without consent. Third-party services like Google AdSense
+            may use cookies to show relevant ads.
+        </p>
+    </div>
 </section>
 
 <!-- TERMS -->
 <section id="terms">
-  <div class="card">
-    <h3>Terms & Conditions</h3>
-    <p>
-      By accessing GIS, you agree to use the website for lawful purposes only.
-    </p>
-    <p>
-      All content is provided for informational purposes and may be updated
-      or changed without notice.
-    </p>
-    <p>
-      GIS is not responsible for any loss or damage resulting from the use
-      of information published on this website.
-    </p>
-  </div>
+    <div class="card">
+        <h2>Terms & Conditions</h2>
+        <p>
+            By using GIS, you agree that the content is for informational
+            purposes only. We do not guarantee earnings or results.
+        </p>
+    </div>
 </section>
 
 <footer>
-  © 2026 GIS | All Rights Reserved
+    © 2026 GIS | All Rights Reserved
 </footer>
 
 </body>
-  </html>
+</html>
